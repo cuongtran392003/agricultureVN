@@ -1,11 +1,9 @@
-import { Text, View } from "react-native";
+import { SettingScreen } from "@/screens/setting/SettingScreen";
 
 
 
 export default function Setting() {
     return (
-        <View>
-            <Text>Chức năng đang được phát triển</Text>
-        </View>
+        <SettingScreen />
     )
 }

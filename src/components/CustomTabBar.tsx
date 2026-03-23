@@ -39,7 +39,7 @@ const TABS: {
   },
   {
     name: 'Cài đặt',
-    path: '/(tabs)/settings',
+    path: '/(tabs)/setting',
     icon: 'settings',
     iconOutline: 'settings-outline',
   },

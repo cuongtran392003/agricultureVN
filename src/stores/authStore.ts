@@ -29,11 +29,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   loadToken: async () => {
     try {
       const token = await AsyncStorage.getItem('accessToken');
-      console.log('>>> check token load app', token)
       if (token) {
         // Có token → lấy thông tin user
         const userStr = await AsyncStorage.getItem('user');
-        console.log('>>> check userStr', userStr)
         if (userStr) {
           const user = JSON.parse(userStr);
           set({ user, isLoggedIn: true });
