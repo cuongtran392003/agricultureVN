@@ -12,4 +12,8 @@ export const ICONS = {
     iconBell: require('./icon-bell.png'),
     iconTickWhite: require('./icon-tick-white.png'),
     iconTimeWhite: require('./icon-time-white.png'),
+    iconMarket: require('./icon-market.png'),
+    iconBellBlack: require('./icon-bell-black.png'),
+    iconTrendingUp: require('./icon-trending-up.png'),
+    iconChat: require('./icon-chat.png'),
 }
