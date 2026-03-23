@@ -1,34 +1,34 @@
 import { Button, ButtonText } from "@/components/ui/button";
 import {
-    FormControl,
-    FormControlError,
-    FormControlErrorIcon,
-    FormControlErrorText,
-    FormControlHelper,
-    FormControlHelperText,
-    FormControlLabel,
-    FormControlLabelText,
+  FormControl,
+  FormControlError,
+  FormControlErrorIcon,
+  FormControlErrorText,
+  FormControlHelper,
+  FormControlHelperText
 } from "@/components/ui/form-control";
 import { AlertCircleIcon } from "@/components/ui/icon";
 import { Input, InputField } from "@/components/ui/input";
 import { VStack } from "@/components/ui/vstack";
+import { useLogin } from "@/hooks/useAuth";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { Alert } from "react-native";
 
 export const FormLogin = () => {
   const [isInvalid, setIsInvalid] = useState(false);
   const [inputValueEmail, setInputValueEmail] = useState<string>("");
   const [inputValuePassword, setInputValuePassword] = useState<string>("");
   const router = useRouter()
+  const { mutate: login, isPending, isError, error } = useLogin()
 
   const handleSubmit = () => {
-    if (inputValuePassword.length < 6) {
-      setIsInvalid(true);
-      console.log("Invalid input");
-    } else {
-      router.push('/(tabs)/home')
-      setIsInvalid(false);
+    login({ email: inputValueEmail, password: inputValuePassword })
+    if (isError) {
+      Alert.alert('Lỗi', error?.message)
+    }
+    if (!isError) {
+      router.replace('/(tabs)/home')
     }
   };
   return (

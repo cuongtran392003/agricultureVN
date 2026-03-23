@@ -1,12 +1,16 @@
 import { ICONS } from "assets/icons";
 import { Colors } from "@/constant/Colors";
 import { Image, Text, View } from "react-native";
+import { useAuthStore } from "@/stores/authStore";
 
 type HomeHeaderProps = {
   data: any; // Replace 'any' with the actual type if available
 };
 
 export const HomeHeader = (props: HomeHeaderProps) => {
+
+  const {user} = useAuthStore()
+  console.log('>>> check user', user)
   return (
     <View
       className="flex-row items-center justify-between px-[24px] py-[16px] rounded-b-[20px]"
@@ -17,7 +21,7 @@ export const HomeHeader = (props: HomeHeaderProps) => {
           className="text-[24px] font-bold"
           style={{ color: Colors.forestgreen }}
         >
-          Vườn của tôi
+          Vườn của {user?.name}
         </Text>
         <Text
           className="text-[14px] font-semibold"

@@ -8,6 +8,7 @@ import { WeekCalendar } from "./components/WeekCalendar";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
+import { FloatButton } from "./components/FloatButton";
 
 dayjs.locale("vi");
 
@@ -121,6 +122,7 @@ export const ScheduleScreen = () => {
           })}
         </View>
       </ScrollView>
+      <FloatButton/>
     </View>
   );
 };
