@@ -1,11 +1,12 @@
 // components/CustomTabBar.tsx
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { usePathname, router } from 'expo-router';
-import { ComponentProps } from 'react';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
+import { router, usePathname } from "expo-router";
+import { ComponentProps } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-type IoniconsName = ComponentProps<typeof Ionicons>['name'];
+type IoniconsName = ComponentProps<typeof Ionicons>["name"];
 
 const TABS: {
   name: string;
@@ -14,34 +15,34 @@ const TABS: {
   iconOutline: IoniconsName;
 }[] = [
   {
-    name: 'Trang chủ',
-    path: '/(tabs)/home',
-    icon: 'home',
-    iconOutline: 'home-outline',
+    name: "Trang chủ",
+    path: "/(tabs)/home",
+    icon: "home",
+    iconOutline: "home-outline",
   },
   {
-    name: 'Lịch trình',
-    path: '/(tabs)/schedule',
-    icon: 'calendar',
-    iconOutline: 'calendar-outline',
+    name: "Lịch trình",
+    path: "/(tabs)/schedule",
+    icon: "calendar",
+    iconOutline: "calendar-outline",
   },
   {
-    name: 'Chẩn đoán',
-    path: '/(tabs)/diagnosis',
-    icon: 'camera',
-    iconOutline: 'camera-outline',
+    name: "Chẩn đoán",
+    path: "/(tabs)/diagnosis",
+    icon: "camera",
+    iconOutline: "camera-outline",
   },
   {
-    name: 'Thị trường',
-    path: '/(tabs)/market',
-    icon: 'stats-chart',
-    iconOutline: 'stats-chart-outline',
+    name: "Thị trường",
+    path: "/(tabs)/market",
+    icon: "stats-chart",
+    iconOutline: "stats-chart-outline",
   },
   {
-    name: 'Cài đặt',
-    path: '/(tabs)/setting',
-    icon: 'settings',
-    iconOutline: 'settings-outline',
+    name: "Cài đặt",
+    path: "/(tabs)/setting",
+    icon: "settings",
+    iconOutline: "settings-outline",
   },
 ];
 
@@ -52,21 +53,28 @@ export default function CustomTabBar() {
   return (
     <View style={[styles.container, { paddingBottom: insets.bottom || 12 }]}>
       {TABS.map((tab) => {
-        const isActive = pathname === tab.path || pathname.includes(tab.path.replace('/(tabs)', ''));
+        const isActive =
+          pathname === tab.path ||
+          pathname.includes(tab.path.replace("/(tabs)", ""));
 
         return (
           <TouchableOpacity
             key={tab.path}
-            onPress={() => router.navigate(tab.path as any)}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              router.navigate(tab.path as any);
+            }}
             style={styles.tab}
             activeOpacity={0.7}
           >
             {/* Icon với background tròn khi active */}
-            <View style={[styles.iconWrapper, isActive && styles.iconWrapperActive]}>
+            <View
+              style={[styles.iconWrapper, isActive && styles.iconWrapperActive]}
+            >
               <Ionicons
                 name={isActive ? tab.icon : tab.iconOutline}
                 size={22}
-                color={isActive ? '#2E7D32' : '#8D7B6A'}
+                color={isActive ? "#2E7D32" : "#8D7B6A"}
               />
             </View>
 
@@ -83,12 +91,12 @@ export default function CustomTabBar() {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
+    flexDirection: "row",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: '#F0EDE8',
-    shadowColor: '#000',
+    borderTopColor: "#F0EDE8",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.06,
     shadowRadius: 8,
@@ -96,26 +104,26 @@ const styles = StyleSheet.create({
   },
   tab: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     gap: 4,
   },
   iconWrapper: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   iconWrapperActive: {
-    backgroundColor: '#E8F5E9', // nền tròn xanh lá nhạt
+    backgroundColor: "#E8F5E9", // nền tròn xanh lá nhạt
   },
   label: {
     fontSize: 10,
-    color: '#8D7B6A',
-    fontWeight: '400',
+    color: "#8D7B6A",
+    fontWeight: "600",
   },
   labelActive: {
-    color: '#2E7D32',
-    fontWeight: '600',
+    color: "#2E7D32",
+    fontWeight: "700",
   },
 });

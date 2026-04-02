@@ -1,4 +1,4 @@
 export type TaskSummaryCardProps = {
-  label: "completed" | "upcoming";
+  label: "completed" | "pending";
   totalTasks: number;
 };

@@ -9,13 +9,13 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        sceneStyle: { backgroundColor: "transparent" },
       }}
-
       tabBar={() => <CustomTabBar/>}
     >
-      <StatusBar style="dark" backgroundColor="white"/>
+      <StatusBar style="dark" backgroundColor="transparent" translucent={true}/>
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{ title: "Home", tabBarIcon: () => <Ionicons name="home" /> }}
       />
       <Tabs.Screen name="schedule" options={{ title: "Schedule" }} />

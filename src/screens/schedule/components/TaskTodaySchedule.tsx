@@ -1,5 +1,7 @@
-import { ICONS } from "assets/icons";
 import { Colors } from "@/constant/Colors";
+import { formatTime } from "@/utils/formatTimeDate";
+import { ICONS } from "assets/icons";
+import * as Haptics from "expo-haptics";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
 type TaskTodayScheduleProps = {
@@ -21,17 +23,27 @@ export const TaskTodaySchedule = ({
 }: TaskTodayScheduleProps) => {
   return (
     <View
-      className="w-full mt-5 bg-white "
+      className="w-full mt-4 bg-white"
       style={{
-        borderLeftWidth: 10,
-        ...(status === "upcoming"
+        borderLeftWidth: 6,
+        ...(status === "pending"
           ? {
-              borderLeftColor: Colors.sunlightyellow,
+              borderLeftColor: Colors.brandorange,
             }
           : {
               borderLeftColor: Colors.forestgreen,
             }),
-        borderRadius: 16,
+        borderRadius: 20,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.05,
+        shadowRadius: 10,
+        elevation: 3,
+        borderTopWidth: 1,
+        borderRightWidth: 1,
+        borderBottomWidth: 1,
+        borderColor: "rgba(0,0,0,0.03)",
+        overflow: "hidden",
       }}
     >
       <View className=" flex-row justify-around gap-2 items-center p-[16px]">
@@ -42,23 +54,25 @@ export const TaskTodaySchedule = ({
             style={{ width: "100%", height: "100%" }}
           />
         </View>
-        <View className="gap-2 w-[177px]">
-          <Text className="font-bold text-[18px]">{title}</Text>
+        <View className="flex-1 ml-3 gap-2">
+          <Text className="font-bold text-[18px]" numberOfLines={1}>
+            {title}
+          </Text>
           <Text className="text-[12px]" style={{ color: Colors.brownearth }}>
             {subtitle}
           </Text>
           <View className="flex-row items-center gap-5">
-            <Text className="text-[12px]" style={{ color: Colors.lightgray }}>
-              {time}
+            <Text className="text-[12px]" style={{ color: Colors.brownearth }}>
+              {formatTime(new Date(time))}
             </Text>
-            <Text className="text-[12px]" style={{ color: Colors.lightgray }}>
+            <Text className="text-[12px]" style={{ color: Colors.brownearth }}>
               {location}
             </Text>
           </View>
         </View>
-        {status === "upcoming" ? (
+        {status === "pending" ? (
           <View className="bg-[#FEF3C7] p-[8px] rounded-[12px]">
-            <Text style={{ color: Colors.brandorange }}>Sắp tới</Text>
+            <Text style={{ color: Colors.brandorange }}>Chờ thực hiện</Text>
           </View>
         ) : (
           <View className="bg-[#E1EDE6] rounded-full p-[8px]">
@@ -67,11 +81,16 @@ export const TaskTodaySchedule = ({
         )}
       </View>
       <View className="bg-[#F9FAFB] p-[16px] rounded-[12px]">
-        {status === "upcoming" ? (
+        {status === "pending" ? (
           <TouchableOpacity
             className="px-[16px] py-[8px] rounded-[12px] bg-[#F2F7F4] 
-        items-center justify-center w-[155px] self-end"
-            onPress={onMarkDone}
+        items-center justify-center self-end"
+            onPress={() => {
+              Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Success,
+              );
+              onMarkDone();
+            }}
           >
             <Text className="font-bold">Đánh dấu xong</Text>
           </TouchableOpacity>

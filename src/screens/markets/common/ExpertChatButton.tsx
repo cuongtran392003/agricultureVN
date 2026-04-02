@@ -1,14 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Colors } from "@/constant/Colors";
 import { ICONS } from "assets/icons";
+import { useRouter } from "expo-router";
 import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 
 export const ExpertChatButton = () => {
+  const router = useRouter()
   return (
     <Button
-      className="flex-row self-end items-center justify-center gap-2 px-3 py-2 rounded-full mt-5 w-[200px] h-[50px]"
-      style={{ backgroundColor: Colors.forestgreen }}
-      onPress={() => console.log("click")}
+      className="flex-row items-center justify-center gap-2 px-3 py-2 rounded-full mt-2 self-center w-[200px] h-[50px] mb-6"
+      style={{
+        backgroundColor: Colors.forestgreen,
+        elevation: 5,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+      }}
+      onPress={() => router.navigate("/chat" as any)}
     >
       <View
         style={{

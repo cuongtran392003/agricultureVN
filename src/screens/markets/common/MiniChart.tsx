@@ -21,7 +21,7 @@ export const MiniChart = ({ data, color = "bg-emerald-600" }: MiniChartProps) =>
           <View
             key={index}
             style={{ height: `${heightPercentage}%` }}
-            className={`w-[12%] rounded-t-sm ${color} opacity-80`}
+            className={`w-[14%] rounded-[4px] ${color} opacity-90`}
           />
         );
       })}

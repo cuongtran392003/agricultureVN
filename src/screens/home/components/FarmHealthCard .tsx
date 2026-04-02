@@ -20,7 +20,14 @@ export const FarmHealthCard = () => {
   return (
     <View
       className="p-[24px] items-center rounded-[24px] gap-5 mt-[20px]"
-      style={{ backgroundColor: Colors.forestgreen }}
+      style={{
+        backgroundColor: Colors.forestgreen,
+        shadowColor: Colors.deepbark,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 10,
+        elevation: 6,
+      }}
     >
       <Text className="text-white font-bold text-[20px]">
         Sức khỏe trang trại

@@ -1,10 +1,12 @@
-import { ICONS } from "assets/icons";
+import { Button, ButtonText } from "@/components/ui/button";
 import { FormLogin } from "@/screens/login/FormLogin";
+import { ICONS } from "assets/icons";
+import { useRouter } from "expo-router";
 import { Image, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, ButtonText } from "@/components/ui/button";
 
 export default function Login() {
+  const router = useRouter();
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="relative">
@@ -40,6 +42,7 @@ export default function Login() {
             Chưa có tài khoản?
           </Text>
           <Button
+            onPress={() => router.navigate("/register")}
             size="lg"
             className="w-full h-[56px] mx-auto bg-white border-[1px] border-[#4CAF50] rounded-[12px]"
           >

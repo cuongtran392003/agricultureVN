@@ -1,5 +1,6 @@
 import { Colors } from "@/constant/Colors";
-import { Image, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 
 type WeatherProps = {
   location: string;
@@ -11,10 +12,22 @@ type WeatherProps = {
 };
 
 export const WeatherCard = (props: WeatherProps) => {
+  const router = useRouter()
   return (
-    <View
-      className="p-[20px] rounded-[24px] flex-row justify-between"
-      style={{ backgroundColor: Colors.leafgreen }}
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => {
+        router.navigate("/weather" as any);
+      }}
+      className="w-full p-[20px] rounded-[24px] flex-row justify-between items-center"
+      style={{
+        backgroundColor: Colors.leafgreen,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 10,
+        elevation: 6,
+      }}
     >
       <View>
         <Text
@@ -44,6 +57,6 @@ export const WeatherCard = (props: WeatherProps) => {
           style={{ width: 50, height: 50 }}
         />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };

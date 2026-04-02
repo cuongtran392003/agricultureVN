@@ -1,14 +1,11 @@
+import { EmptyState } from "@/components/EmptyState";
+import { Skeleton } from "@/components/Skeleton";
 import { Colors } from "@/constant/Colors";
 import { getPriceService } from "@/services/service.price";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, RefreshControl, Text, View } from "react-native";
+import Animated, { FadeInUp } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AgriNewsCard } from "./components/AgriNewsCard";
 import { MarketHeader } from "./components/MarketHeader";
@@ -52,26 +49,40 @@ export const MarketScreen = () => {
   };
   return (
     <SafeAreaView
+      edges={["top"]}
       className="items-center"
-      style={{ flex: 1, backgroundColor: Colors.lightyellow }}
+      style={{ flex: 1, backgroundColor: "transparent" }}
     >
-      <StatusBar style="dark" backgroundColor={Colors.offwhite} />
-      <View style={{ backgroundColor: Colors.lightyellow }}>
+      <StatusBar
+        style="dark"
+        backgroundColor="transparent"
+        translucent={true}
+      />
+      <View style={{ flex: 1 }}>
         <MarketHeader />
         {loading ? (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <ActivityIndicator size={"large"} color={Colors.forestgreen} />
+          <View className="flex-row flex-wrap justify-between px-4 pt-5 gap-y-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <Skeleton key={i} width="48%" height={180} borderRadius={16} />
+            ))}
           </View>
+        ) : data.length === 0 && !refreshing ? (
+          <EmptyState
+            title="Thị trường đang nghỉ ngơi"
+            description="Chưa có thông tin giá nông sản hôm nay. Hãy thử tải lại nhé."
+            iconName="leaf"
+            buttonText="Tải lại ngay"
+            onAction={onRefresh}
+          />
         ) : (
           <FlatList
+            className="flex-1"
             data={data}
             keyExtractor={(item, index) => `${item.id}-${index}`}
             numColumns={2}
             columnWrapperStyle={{ justifyContent: "space-between" }}
             contentContainerStyle={{
-              paddingBottom: 20,
+              paddingBottom: 16,
               paddingHorizontal: 16,
               paddingTop: 20,
             }}
@@ -94,7 +105,7 @@ export const MarketScreen = () => {
                     Giá nông sản hôm nay
                   </Text>
                   <Text
-                    className="text-[14px] w-[100px]"
+                    className="text-[14px] flex-shrink-1 text-right ml-2"
                     style={{ color: Colors.brownearth }}
                   >
                     Cập nhật: 9:30, 24/05/2026
@@ -103,13 +114,21 @@ export const MarketScreen = () => {
               </>
             }
             ListFooterComponent={<AgriNewsCard />}
-            renderItem={({ item }) => (
-              <MarketPriceCard
-                name={item.name}
-                price={item.price}
-                change={item.change}
-                history={item.history || []}
-              />
+            renderItem={({ item, index }) => (
+              <Animated.View
+                entering={FadeInUp.delay(100 + index * 50)
+                  .springify()
+                  .damping(15)
+                  .stiffness(100)}
+                style={{ width: "48%" }}
+              >
+                <MarketPriceCard
+                  name={item.name}
+                  price={item.price}
+                  change={item.change}
+                  history={item.history || []}
+                />
+              </Animated.View>
             )}
           />
         )}

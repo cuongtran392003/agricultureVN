@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { WeekDayItems } from "../common/WeekDayItems";
@@ -5,17 +6,23 @@ import { WeekDayItems } from "../common/WeekDayItems";
 type WeekDay = {
   day: number;
   date: number;
+  fullDate: string;
   hasEvent: boolean;
 };
 
 type WeekCalendarProps = {
-  onDateSelect: (date: number) => void;
+  onDateSelect: (date: string) => void;
   eventDates: number[];
 };
 
-export const WeekCalendar = ({ onDateSelect, eventDates }: WeekCalendarProps) => {
+export const WeekCalendar = ({
+  onDateSelect,
+  eventDates,
+}: WeekCalendarProps) => {
   const [today, setToday] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date().getDate());
+  const [selectedDateStr, setSelectedDateStr] = useState(
+    dayjs().format("YYYY-MM-DD"),
+  );
   const [weekOffset, setWeekOffset] = useState(0);
 
   useEffect(() => {
@@ -36,9 +43,11 @@ export const WeekCalendar = ({ onDateSelect, eventDates }: WeekCalendarProps) =>
     for (let i = 0; i < 21; i++) {
       const dow = current.getDay();
       const dayIndex = dow === 0 ? 6 : dow - 1;
+      const fullDateStr = dayjs(current).format("YYYY-MM-DD");
       days.push({
         day: dayIndex,
         date: current.getDate(),
+        fullDate: fullDateStr,
         hasEvent: eventDates.includes(current.getDate()),
       });
       current.setDate(current.getDate() + 1);
@@ -48,9 +57,8 @@ export const WeekCalendar = ({ onDateSelect, eventDates }: WeekCalendarProps) =>
 
   const weekDays = getWeekDays();
 
-  // Fix: dùng () thay vì {}
   const weeks = Array.from({ length: 3 }, (_, i) =>
-    weekDays.slice(i * 7, (i + 1) * 7)
+    weekDays.slice(i * 7, (i + 1) * 7),
   );
 
   const getMonthLabel = () => {
@@ -61,9 +69,9 @@ export const WeekCalendar = ({ onDateSelect, eventDates }: WeekCalendarProps) =>
     return `Tháng ${current.getMonth() + 1}, ${current.getFullYear()}`;
   };
 
-  const handleDateSelect = (date: number) => {
-    setSelectedDate(date);
-    onDateSelect?.(date);
+  const handleDateSelect = (fullDateStr: string) => {
+    setSelectedDateStr(fullDateStr);
+    onDateSelect?.(fullDateStr);
   };
 
   return (
@@ -78,17 +86,16 @@ export const WeekCalendar = ({ onDateSelect, eventDates }: WeekCalendarProps) =>
         </TouchableOpacity>
       </View>
 
-      {/* Bỏ FlatList, dùng .map() */}
       {weeks.map((week, weekIndex) => (
         <View key={weekIndex} className="flex-row justify-between mb-2">
           {week.map((item, index) => (
             <WeekDayItems
-              key={`${item.date}-${index}`}
+              key={`${item.fullDate}-${index}`}
               day={item.day}
               date={item.date}
-              isSelected={item.date === selectedDate}
+              isSelected={item.fullDate === selectedDateStr}
               hasEvent={item.hasEvent}
-              onPress={() => handleDateSelect(item.date)}
+              onPress={() => handleDateSelect(item.fullDate)}
             />
           ))}
         </View>

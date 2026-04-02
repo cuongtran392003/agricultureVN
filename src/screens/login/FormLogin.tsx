@@ -5,36 +5,58 @@ import {
   FormControlErrorIcon,
   FormControlErrorText,
   FormControlHelper,
-  FormControlHelperText
+  FormControlHelperText,
 } from "@/components/ui/form-control";
 import { AlertCircleIcon } from "@/components/ui/icon";
 import { Input, InputField } from "@/components/ui/input";
 import { VStack } from "@/components/ui/vstack";
+import { Colors } from "@/constant/Colors";
 import { useLogin } from "@/hooks/useAuth";
+import { mapAuthError } from "@/utils/authErrorMap";
+import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert } from "react-native";
 
 export const FormLogin = () => {
-  const [isInvalid, setIsInvalid] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
   const [inputValueEmail, setInputValueEmail] = useState<string>("");
   const [inputValuePassword, setInputValuePassword] = useState<string>("");
-  const router = useRouter()
-  const { mutate: login, isPending, isError, error } = useLogin()
+  const [showPassword, setShowPassWord] = useState<boolean>(false);
+  const router = useRouter();
+  const { mutateAsync: login, isPending } = useLogin();
 
-  const handleSubmit = () => {
-    login({ email: inputValueEmail, password: inputValuePassword })
-    if (isError) {
-      Alert.alert('Lỗi', error?.message)
-    }
-    if (!isError) {
-      router.replace('/(tabs)/home')
+  const handleSubmit = async () => {
+    const email = inputValueEmail.trim();
+    const password = inputValuePassword.trim();
+    try {
+      if (!email && !password) {
+        setEmailError(true);
+        setPasswordError(true);
+        Alert.alert("Lỗi", "Vui lòng nhập email hoặc số điện thoại");
+        return;
+      }
+      if (password.length < 6) {
+        setPasswordError(true);
+        Alert.alert("Lỗi", "Mật khẩu phải có ít nhất 6 ký tự");
+        return;
+      }
+      setEmailError(false);
+      setPasswordError(false);
+      await login({ email, password });
+      router.replace("/(tabs)/home");
+    } catch (error: any) {
+      const message = mapAuthError(error.message);
+      Alert.alert("Lỗi", message);
+      setEmailError(true);
+      setPasswordError(true);
     }
   };
   return (
     <VStack>
       <FormControl
-        isInvalid={isInvalid}
+        isInvalid={emailError}
         size="lg"
         isDisabled={false}
         isReadOnly={false}
@@ -57,19 +79,30 @@ export const FormLogin = () => {
         </FormControlError>
       </FormControl>
       <FormControl
-        isInvalid={isInvalid}
+        isInvalid={passwordError}
         size="md"
         isDisabled={false}
         isReadOnly={false}
         isRequired={false}
       >
-        <Input className="my-1 h-[58px] rounded-[12px] bg-[#F8FAFC]" size="lg">
+        <Input className="my-1 flex-row items-center justify-between pr-2 h-[58px] rounded-[12px] bg-[#F8FAFC]" size="lg">
           <InputField
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Nhập mật khẩu"
             value={inputValuePassword}
             onChangeText={(text) => setInputValuePassword(text)}
           />
+          <Button
+            variant="link"
+            size="sm"
+            onPress={() => setShowPassWord(!showPassword)}
+          >
+            {showPassword ? (
+              <FontAwesome name="eye" size={24} color={Colors.forestgreen} />
+            ) : (
+              <FontAwesome name="eye-slash" size={24} color={Colors.forestgreen} />
+            )}
+          </Button>
         </Input>
         <FormControlHelper>
           <FormControlHelperText>
@@ -88,7 +121,9 @@ export const FormLogin = () => {
         size="lg"
         onPress={handleSubmit}
       >
-        <ButtonText className="text-white uppercase w-full text-center font-bold text-[16px]">Đăng nhập ngay </ButtonText>
+        <ButtonText className="text-white uppercase w-full text-center font-bold text-[16px]">
+          Đăng nhập ngay{" "}
+        </ButtonText>
       </Button>
     </VStack>
   );

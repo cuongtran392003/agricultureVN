@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Colors } from "@/constant/Colors";
+import { formatTime } from "@/utils/formatTimeDate";
 import { Text, View } from "react-native";
 
 type UpcomingTaskProps = {
@@ -10,24 +11,32 @@ type UpcomingTaskProps = {
 
 export const UpcomingTask = ({ title, subTitle, time }: UpcomingTaskProps) => {
   return (
-    <Card className="mt-5">
-      <View className="w-full flex-row items-center justify-around">
+    <View
+      className="w-full mt-3 rounded-[16px] p-4 bg-[#F8F9FA] flex-row items-center justify-between"
+      style={{
+        borderWidth: 1,
+        borderColor: "#E5E7EB",
+      }}
+    >
+      <View className="flex-row items-center flex-1">
         <View
-          className="w-2 h-2 rounded-full"
-          style={{ backgroundColor: Colors.brandorange }}
+          className="w-3 h-3 rounded-full mr-4"
+          style={{ backgroundColor: Colors.brandorange, opacity: 0.7 }}
         ></View>
-        <View>
-          <Text className="font-bold text-[14px]">
+        <View className="flex-1">
+          <Text className="font-bold text-[15px] mb-1 text-gray-800" numberOfLines={1}>
             {title}
           </Text>
-          <Text className="text-[12px]" style={{ color: Colors.brownearth }}>
+          <Text className="text-[13px]" style={{ color: Colors.brownearth }}>
             {subTitle}
           </Text>
         </View>
-        <Text className="text-[14px]" style={{ color: Colors.brownearth }}>
-          {time}
+      </View>
+      <View className="bg-white px-3 py-1.5 rounded-lg border border-gray-200">
+        <Text className="font-medium text-[13px]" style={{ color: Colors.brownearth }}>
+          {formatTime(new Date(time))}
         </Text>
       </View>
-    </Card>
+    </View>
   );
 };

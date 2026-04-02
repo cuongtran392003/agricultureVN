@@ -1,10 +1,5 @@
-import { View,Text } from "react-native"
+import { DiagnosisScreen } from "@/screens/diagnosis/DiagnosisScreen";
 
-
-export const Diagnosis = () => {
-    return (
-        <View>
-            <Text>Diagnosis Screen</Text>
-        </View>
-    )
+export default function Diagnosis() {
+  return <DiagnosisScreen />;
 }

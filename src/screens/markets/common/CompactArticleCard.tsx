@@ -14,10 +14,20 @@ export const CompactArticleCard = ({
   image,
 }: CompactArticleCardProps) => {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity activeOpacity={0.7}>
       <Card
-        className="w-full rounded-[16px] overflow-hidden"
-        style={{ padding: 0 }}
+        className="w-full rounded-[16px] overflow-hidden mt-1 mb-2"
+        style={{ 
+          padding: 0,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.05,
+          shadowRadius: 10,
+          elevation: 3,
+          backgroundColor: "#fff",
+          borderWidth: 1,
+          borderColor: "rgba(0,0,0,0.03)",
+        }}
       >
         <View className="flex-row items-center p-3 gap-3">
           <Image

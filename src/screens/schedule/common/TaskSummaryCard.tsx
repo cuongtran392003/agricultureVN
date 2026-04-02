@@ -7,13 +7,13 @@ import { Image, View,Text } from "react-native";
 
 const LABELS ={
     completed: 'Đã hoàn thành',
-    upcoming: 'Sắp tới'
+    pending: 'Chờ thực hiện'
 }
 
 export const TaskSummaryCard = (props: TaskSummaryCardProps) => {
   return (
-    <View className="flex-row gap-5 w-[171px] h-[69.5px] items-center justify-center rounded-[12px]"
-    style={{backgroundColor:props.label === "completed" ? '#E1EDE6' : '#EDE6DE'}}
+    <View className="flex-row gap-3 h-[69.5px] items-center justify-center rounded-[12px]"
+    style={{backgroundColor:props.label === "completed" ? '#E1EDE6' : '#EDE6DE', width: '48%'}}
     >
       <View
         style={{ backgroundColor: props.label === "completed" ? Colors.forestgreen : Colors.brownearth }}

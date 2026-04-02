@@ -5,7 +5,20 @@ import { Image, Text, View } from "react-native";
 
 export const FeaturedCard = () => {
   return (
-    <Card className="w-full rounded-[16px] overflow-hidden" style={{ gap: 0 }}>
+    <Card
+      className="w-full rounded-[16px] overflow-hidden mb-2"
+      style={{
+        gap: 0,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.05,
+        shadowRadius: 10,
+        elevation: 3,
+        backgroundColor: "#fff",
+        borderWidth: 1,
+        borderColor: "rgba(0,0,0,0.03)",
+      }}
+    >
       <Image
         source={IMAGES.imageLogin}
         style={{ width: "100%", height: 180, borderRadius: 16 }}
