@@ -13,7 +13,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { Text, TextInput } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../../global.css";
 
@@ -54,33 +53,31 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <QueryClientProvider client={queryClient}>
-        <GluestackUIProvider>
-          <SafeAreaProvider>
-            <GlobalBackground />
-            <StatusBar
-              style="dark"
-              backgroundColor="transparent"
-              translucent={true}
-            />
-            <Stack
-              screenOptions={{
-                headerShown: false,
-                animation: "slide_from_right",
-                contentStyle: { backgroundColor: "transparent" },
-              }}
-            >
-              <Stack.Screen name="index" />
-              <Stack.Screen name="login" />
-              <Stack.Screen name="chat" />
-              <Stack.Screen name="weather" />
-              <Stack.Screen name="register" />
-              <Stack.Screen name="(tabs)" />
-            </Stack>
-          </SafeAreaProvider>
-        </GluestackUIProvider>
-      </QueryClientProvider>
-    </GestureHandlerRootView>
+    <QueryClientProvider client={queryClient}>
+      <GluestackUIProvider>
+        <SafeAreaProvider>
+          <GlobalBackground />
+          <StatusBar
+            style="dark"
+            backgroundColor="transparent"
+            translucent={true}
+          />
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              animation: "slide_from_right",
+              contentStyle: { backgroundColor: "transparent" },
+            }}
+          >
+            <Stack.Screen name="index" />
+            <Stack.Screen name="login" />
+            <Stack.Screen name="chat" />
+            <Stack.Screen name="weather" />
+            <Stack.Screen name="register" />
+            <Stack.Screen name="(tabs)" />
+          </Stack>
+        </SafeAreaProvider>
+      </GluestackUIProvider>
+    </QueryClientProvider>
   );
 }

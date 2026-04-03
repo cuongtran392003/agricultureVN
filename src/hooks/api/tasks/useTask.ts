@@ -1,6 +1,8 @@
 import { createTask } from "@/services/tasks/createTask.service";
+import { deleteTask } from "@/services/tasks/deleteTask.service";
 import { getAllTasks } from "@/services/tasks/getAllTask.service";
-import { CreateTaskDto } from "@/types/tasks";
+import { updateTask } from "@/services/tasks/updateTask.service";
+import { CreateTaskDto, UpdateTaskDto } from "@/types/tasks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert } from "react-native";
 
@@ -31,3 +33,36 @@ export const useCreateTask = () => {
     },
   });
 };
+
+
+export const useUpdateTask = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({id,status}:{id: string,status: string}) => {
+      const task = await updateTask(id, {status});
+      return task;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+    onError: () => {
+      Alert.alert("Thất bại", "Cập nhật công việc thất bại");
+    },
+  });
+}
+
+export const useDeleteTask = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const task = await deleteTask(id);
+      return task;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+    onError: () => {
+      Alert.alert("Thất bại", "Xóa công việc thất bại");
+    },
+  }); 
+}

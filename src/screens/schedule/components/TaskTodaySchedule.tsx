@@ -1,5 +1,6 @@
 import { Colors } from "@/constant/Colors";
 import { formatTime } from "@/utils/formatTimeDate";
+import { FontAwesome } from "@expo/vector-icons";
 import { ICONS } from "assets/icons";
 import * as Haptics from "expo-haptics";
 import { Image, Text, TouchableOpacity, View } from "react-native";
@@ -11,6 +12,8 @@ type TaskTodayScheduleProps = {
   location: string;
   status: string;
   onMarkDone: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
 };
 
 export const TaskTodaySchedule = ({
@@ -20,6 +23,8 @@ export const TaskTodaySchedule = ({
   location,
   status,
   onMarkDone,
+  onEdit,
+  onDelete,
 }: TaskTodayScheduleProps) => {
   return (
     <View
@@ -80,11 +85,10 @@ export const TaskTodaySchedule = ({
           </View>
         )}
       </View>
-      <View className="bg-[#F9FAFB] p-[16px] rounded-[12px]">
+      <View className="bg-[#F9FAFB] p-[16px] flex-row items-center justify-between rounded-[12px]">
         {status === "pending" ? (
           <TouchableOpacity
-            className="px-[16px] py-[8px] rounded-[12px] bg-[#F2F7F4] 
-        items-center justify-center self-end"
+            className="px-[16px] py-[8px] rounded-[12px] bg-[#F2F7F4] w[50%]"
             onPress={() => {
               Haptics.notificationAsync(
                 Haptics.NotificationFeedbackType.Success,
@@ -95,6 +99,44 @@ export const TaskTodaySchedule = ({
             <Text className="font-bold">Đánh dấu xong</Text>
           </TouchableOpacity>
         ) : null}
+        {status === "pending" ? (
+          <View className="flex-row items-center justify-around gap-2 w-[50%]">
+            <TouchableOpacity
+              className="flex-row items-center gap-2 rounded-lg p-2"
+              style={{ borderColor: Colors.brandorange, borderWidth: 2 }}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                onEdit();
+              }}
+            >
+              <FontAwesome name="edit" size={24} color={Colors.brownearth} />
+              <Text
+                className="text-[14px] font-bold"
+                style={{ color: Colors.brandorange }}
+              >
+                Sửa
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="flex-row items-center gap-2 rounded-lg p-2"
+              style={{ borderColor: Colors.brownearth, borderWidth: 2 }}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                onDelete();
+              }}
+            >
+              <FontAwesome name="trash" size={24} color={Colors.brownearth} />
+              <Text
+                className="text-[14px] font-bold"
+                style={{ color: Colors.brownearth }}
+              >
+                Xóa
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          null
+        )}
       </View>
     </View>
   );

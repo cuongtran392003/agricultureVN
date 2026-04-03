@@ -31,3 +31,7 @@ export interface CreateTaskDto {
   priority: string;
   note: string;
 }
+
+export interface UpdateTaskDto {
+  status: string;
+}

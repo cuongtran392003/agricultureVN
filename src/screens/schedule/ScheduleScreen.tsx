@@ -1,52 +1,31 @@
 import { Colors } from "@/constant/Colors";
-import { useGetAllTask } from "@/hooks/api/tasks/useTask";
+import {
+  useDeleteTask,
+  useGetAllTask,
+  useUpdateTask,
+} from "@/hooks/api/tasks/useTask";
 import { TaskResponse } from "@/types/tasks";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
+import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Alert, ScrollView, Text, View } from "react-native";
 import Animated, { FadeInUp } from "react-native-reanimated";
 import { TaskSummaryCard } from "./common/TaskSummaryCard";
 import { FloatButton } from "./components/FloatButton";
 import { ScheduleHeader } from "./components/SheduleHeader";
+import { TaskTodaySchedule } from "./components/TaskTodaySchedule";
 import { UpcomingTask } from "./components/UpcomingTask";
 import { WeekCalendar } from "./components/WeekCalendar";
-import { SwipeableTaskTodaySchedule } from "./components/SwipeableTaskTodaySchedule";
 
 dayjs.locale("vi");
-
-const taskTodaySchedule = [
-  {
-    title: "Tưới cây",
-    subtitle: "Vườn rau nhà A",
-    time: "08:00 - 09:00",
-    location: "Vườn rau nhà A",
-    status: "upcoming",
-    onMarkDone: () => console.log("Đánh dấu xong"),
-  },
-  {
-    title: "Thu hoạch",
-    subtitle: "Vườn rau nhà B",
-    time: "10:00 - 11:00",
-    location: "Vườn rau nhà B",
-    status: "upcoming",
-    onMarkDone: () => console.log("Đánh dấu xong"),
-  },
-  {
-    title: "Bón phân",
-    subtitle: "Vườn rau nhà C",
-    time: "Hoàn thành lúc 12:00",
-    location: "Vườn rau nhà C",
-    status: "completed",
-    onMarkDone: () => console.log("Đánh dấu xong"),
-  },
-];
 
 export const ScheduleScreen = () => {
   const [now, setNow] = useState(dayjs());
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const { data: dataTask } = useGetAllTask();
-  console.log(">>> check schedule date", dataTask?.data);
+  const { mutateAsync: updateTask } = useUpdateTask();
+  const { mutateAsync: deleteTask } = useDeleteTask();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -69,11 +48,40 @@ export const ScheduleScreen = () => {
     ) || [];
 
   const totalCompleted =
-    dataTask?.data?.filter((task: TaskResponse) => task.status === "completed")
+    tasksToday.filter((task: TaskResponse) => task.status === "completed")
       .length || 0;
   const totalPending =
-    dataTask?.data?.filter((task: TaskResponse) => task.status === "pending")
+    tasksToday.filter((task: TaskResponse) => task.status === "pending")
       .length || 0;
+
+  const handleOnMarkDown = async (id: string) => {
+    try {
+      await updateTask({id, status: "completed" });
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      Alert.alert("Thành công", "Hoàn thành công việc");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteTask = async (id: string) => {
+    try {
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      Alert.alert("Thành công", "Bạn có muốn xóa công việc này không ?", [
+        {
+          text: "Hủy",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Xóa",
+          onPress: () => deleteTask(id),
+        },
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: "transparent" }}>
@@ -132,13 +140,22 @@ export const ScheduleScreen = () => {
                 .damping(15)
                 .stiffness(100)}
             >
-              <SwipeableTaskTodaySchedule
-                task={task}
+              <TaskTodaySchedule
+                title={task.title}
+                subtitle={task.plotId?.name || ""}
+                time={task.scheduledTime}
+                location={task.farmId?.name || ""}
+                status={task.status}
                 onMarkDone={() => {
                   console.log("mark done", task._id);
+                  handleOnMarkDown(task._id);
                 }}
-                onDelete={(taskId) => {
-                  console.log("delete task", taskId);
+                onEdit={() => {
+                  console.log("edit", task._id);
+                }}
+                onDelete={() => {
+                  console.log("delete", task._id);
+                  handleDeleteTask(task._id);
                 }}
               />
             </Animated.View>
