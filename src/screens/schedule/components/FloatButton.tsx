@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Colors } from "@/constant/Colors";
 import { ManageFarmScreen } from "@/screens/ManageFarmScreen/ManageFarmScreen";
+import { ManagePlotScreen } from "@/screens/ManagePlotScreen/ManagePlotScreen";
 import {
   FontAwesome,
   MaterialCommunityIcons,
@@ -21,6 +22,7 @@ import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
 export const FloatButton = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [isModalVisibleFarm, setIsModalVisibleFarm] = useState(false)
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const toggleMenu = () => {
@@ -36,6 +38,10 @@ export const FloatButton = () => {
 
   const onClose = () => {
     setIsModalVisible(false);
+  };
+
+  const onCloseFarm = () => {
+    setIsModalVisibleFarm(false);
   };
 
   return (
@@ -80,11 +86,11 @@ export const FloatButton = () => {
             >
               <TouchableOpacity
                 className="flex-row items-center gap-3"
-                onPress={() => handleNavigate("/manage-plot")}
+                onPress={() => setIsModalVisible(true)}
               >
                 <View className="bg-white px-4 py-2 rounded-[12px] shadow-sm">
                   <Text className="font-bold text-gray-700 text-[16px]">
-                    Quản lý khu đất
+                    Quản lý lô đất
                   </Text>
                 </View>
                 <View className="w-[50px] h-[50px] bg-white rounded-full items-center justify-center shadow-md">
@@ -100,7 +106,7 @@ export const FloatButton = () => {
             <Animated.View entering={FadeInDown} exiting={FadeOutDown}>
               <TouchableOpacity
                 className="flex-row items-center gap-3"
-                onPress={() => setIsModalVisible(true)}
+                onPress={() => setIsModalVisibleFarm(true)}
               >
                 <View className="bg-white px-4 py-2 rounded-[12px] shadow-sm">
                   <Text className="font-bold text-gray-700 text-[16px]">
@@ -139,7 +145,8 @@ export const FloatButton = () => {
           />
         </Button>
       </View>
-      <ManageFarmScreen visible={isModalVisible} onClose={onClose} />
+      <ManageFarmScreen visibleFarm={isModalVisibleFarm} onCloseFarm={onCloseFarm} />
+      <ManagePlotScreen visible={isModalVisible} onClose={onClose} />
     </>
   );
 };

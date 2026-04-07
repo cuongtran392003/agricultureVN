@@ -29,11 +29,11 @@ interface Farm {
 }
 
 type ManageFarmScreenProp = {
-  visible: boolean;
-  onClose?: () => void;
+  visibleFarm: boolean;
+  onCloseFarm: () => void;
 };
 
-export const ManageFarmScreen = ({ visible, onClose }: ManageFarmScreenProp) => {
+export const ManageFarmScreen = ({ visibleFarm, onCloseFarm }: ManageFarmScreenProp) => {
   const { user } = useAuthStore();
   console.log(">>> check user", user);
   const { data: farmResponse } = useFarm();
@@ -48,7 +48,7 @@ export const ManageFarmScreen = ({ visible, onClose }: ManageFarmScreenProp) => 
     }
   }, [farmResponse?.data]);
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisibleFarm, setIsModalVisibleFarm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const [name, setName] = useState("");
@@ -60,7 +60,7 @@ export const ManageFarmScreen = ({ visible, onClose }: ManageFarmScreenProp) => 
     setName("");
     setDescription("");
     setLocation("");
-    setIsModalVisible(true);
+    setIsModalVisibleFarm(true);
   };
 
   const openEditForm = (farm: Farm) => {
@@ -68,7 +68,7 @@ export const ManageFarmScreen = ({ visible, onClose }: ManageFarmScreenProp) => 
     setName(farm.name);
     setDescription(farm.description || "");
     setLocation(farm.location || "");
-    setIsModalVisible(true);
+    setIsModalVisibleFarm(true);
   };
 
   const handleSave = () => {
@@ -106,7 +106,7 @@ export const ManageFarmScreen = ({ visible, onClose }: ManageFarmScreenProp) => 
       Alert.alert("Thành công", "Đã thêm nông trại mới!");
     }
 
-    setIsModalVisible(false);
+    setIsModalVisibleFarm(false);
   };
 
   const handleDelete = (id: string, farmName: string) => {
@@ -142,8 +142,8 @@ export const ManageFarmScreen = ({ visible, onClose }: ManageFarmScreenProp) => 
 
   return (
     <ManageModal
-      visible={visible}
-      onClose={onClose}
+      visible={visibleFarm}
+      onClose={onCloseFarm}
       title="Quản lý nông trại"
       rightAction={AddButton}
     >
@@ -228,8 +228,8 @@ export const ManageFarmScreen = ({ visible, onClose }: ManageFarmScreenProp) => 
         )}
       </ScrollView>
       <ModalManage
-        isModalVisible={isModalVisible}
-        setIsModalVisible={setIsModalVisible}
+        isModalVisible={isModalVisibleFarm}
+        setIsModalVisible={setIsModalVisibleFarm}
         editingId={editingId}
         setEditingId={setEditingId}
         name={name}
