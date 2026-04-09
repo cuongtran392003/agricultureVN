@@ -2,6 +2,8 @@ import { Colors } from "@/constant/Colors";
 import { useFarm } from "@/hooks/api/farm/useFarm";
 import { usePlot } from "@/hooks/api/plot/usePlot";
 import { useCreateTask } from "@/hooks/api/tasks/useTask";
+import { useAuthStore } from "@/stores/authStore";
+import { CreateTaskDto } from "@/types/tasks";
 import { formatDate, formatTime } from "@/utils/formatTimeDate";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -23,6 +25,21 @@ import {
 import Animated, { FadeInUp } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+type TaskFormValue = {
+  userId: string;
+  farmId: string;
+  plotId: string;
+  title: string;
+  description: string;
+  cropName: string;
+  scheduledDate: Date;
+  scheduledTime: Date;
+  status: string;
+  priority: string;
+  imageUrl: string;
+  note: string;
+}
+
 export default function AddTaskScreen() {
   const router = useRouter();
 
@@ -32,16 +49,16 @@ export default function AddTaskScreen() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm({
+  } = useForm<TaskFormValue>({
     defaultValues: {
-      farmId: "farm_1",
-      plotId: "plot_1",
+      farmId: "",
+      plotId: "",
       title: "",
       description: "",
       cropName: "",
       scheduledDate: new Date(),
       scheduledTime: new Date(),
-      status: "upcoming",
+      status: "pending",
       priority: "medium",
       imageUrl: "",
       note: "",
@@ -58,16 +75,34 @@ export default function AddTaskScreen() {
     { label: "Hoàn thành", value: "completed" },
     { label: "Hủy", value: "cancelled" },
   ];
+
+  const selectedFarmId = watch('farmId')
+
   const { data: dataPlot } = usePlot();
   const { data: dataFarm } = useFarm();
+  const { user } = useAuthStore()
   const [show, setShow] = useState(false);
   const [showTime, setShowTime] = useState(false);
 
   const { mutateAsync: createTask } = useCreateTask();
 
-  const onSubmit = async (data: any) => {
+
+
+  const onSubmit = async (data: TaskFormValue) => {
     try {
-      await createTask(data);
+      const userId = user?._id;
+      if (!userId) {
+        Alert.alert("Lỗi", "Vui lòng đăng nhập");
+        return;
+      }
+
+      const formattedData: CreateTaskDto = {
+        ...data,
+        userId: userId,
+        scheduledDate: data.scheduledDate.toISOString(),
+        scheduledTime: data.scheduledTime.toISOString()
+      }
+      await createTask(formattedData);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       Alert.alert("Thành công", "Thêm công việc thành công", [
         { text: "OK", onPress: () => router.back() },
@@ -170,7 +205,7 @@ export default function AddTaskScreen() {
                     <View className="bg-white rounded-xl border border-gray-100">
                       <Picker selectedValue={value} onValueChange={onChange}>
                         <Picker.Item label="Chọn lô đất" value={""} />
-                        {dataPlot?.data?.map((item: any) => {
+                        {dataPlot?.data?.filter((plot: any) => plot.farmId === selectedFarmId || plot.farmId?._id === selectedFarmId).map((item: any) => {
                           return (
                             <Picker.Item label={item.name} value={item._id} />
                           );

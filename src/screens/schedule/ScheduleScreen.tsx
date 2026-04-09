@@ -10,7 +10,7 @@ import "dayjs/locale/vi";
 import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import { Alert, ScrollView, Text, View } from "react-native";
-import Animated, { FadeInUp } from "react-native-reanimated";
+
 import { TaskSummaryCard } from "./common/TaskSummaryCard";
 import { FloatButton } from "./components/FloatButton";
 import { ScheduleHeader } from "./components/SheduleHeader";
@@ -95,23 +95,19 @@ export const ScheduleScreen = () => {
         }}
         showsVerticalScrollIndicator={false}
       >
-        <Animated.View
-          entering={FadeInUp.delay(300).springify().damping(15).stiffness(100)}
-        >
+        <View>
           <WeekCalendar
             eventDates={[3, 9, 12]}
             onDateSelect={(dateStr) => setSelectedDate(dayjs(dateStr))}
           />
-        </Animated.View>
-        <Animated.View
-          entering={FadeInUp.delay(400).springify().damping(15).stiffness(100)}
+        </View>
+        <View
           className="flex-row w-full justify-between mt-5"
         >
           <TaskSummaryCard label="completed" totalTasks={totalCompleted} />
           <TaskSummaryCard label="pending" totalTasks={totalPending} />
-        </Animated.View>
-        <Animated.View
-          entering={FadeInUp.delay(500).springify().damping(15).stiffness(100)}
+        </View>
+        <View
           className="flex-row w-full justify-between items-center mt-5"
         >
           <Text className="font-bold text-[18px]">Nhiệm vụ hôm nay</Text>
@@ -123,7 +119,7 @@ export const ScheduleScreen = () => {
               {dateLabel}
             </Text>
           </View>
-        </Animated.View>
+        </View>
 
         {tasksToday.length === 0 && (
           <Text className="text-gray-500 mt-4 text-center">
@@ -133,12 +129,8 @@ export const ScheduleScreen = () => {
 
         {tasksToday.map((task: TaskResponse, index: number) => {
           return (
-            <Animated.View
+            <View
               key={`today-${index}`}
-              entering={FadeInUp.delay(600 + index * 100)
-                .springify()
-                .damping(15)
-                .stiffness(100)}
             >
               <TaskTodaySchedule
                 title={task.title}
@@ -158,11 +150,10 @@ export const ScheduleScreen = () => {
                   handleDeleteTask(task._id);
                 }}
               />
-            </Animated.View>
+            </View>
           );
         })}
-        <Animated.View
-          entering={FadeInUp.delay(800).springify().damping(15).stiffness(100)}
+        <View
           className="w-full mt-6"
         >
           <Text className="font-bold text-[18px]">Công việc sắp tới</Text>
@@ -173,22 +164,18 @@ export const ScheduleScreen = () => {
           )}
           {upcomingTasks.map((task: TaskResponse, index: number) => {
             return (
-              <Animated.View
+              <View
                 key={`upcoming-${index}`}
-                entering={FadeInUp.delay(900 + index * 100)
-                  .springify()
-                  .damping(15)
-                  .stiffness(100)}
               >
                 <UpcomingTask
                   title={task?.title}
                   subTitle={task?.plotId?.name}
                   time={task?.scheduledTime}
                 />
-              </Animated.View>
+              </View>
             );
           })}
-        </Animated.View>
+        </View>
       </ScrollView>
       <FloatButton />
     </View>

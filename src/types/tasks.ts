@@ -20,6 +20,7 @@ export interface TaskResponse {
 }
 
 export interface CreateTaskDto {
+  userId: string;
   farmId: string;
   plotId: string;
   title: string;

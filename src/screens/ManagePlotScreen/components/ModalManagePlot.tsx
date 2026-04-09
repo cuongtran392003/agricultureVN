@@ -38,7 +38,6 @@ export const ModalManagePlot = ({
       onClose={() => setIsModalVisible(false)}
       title={editingId ? "Sửa thông tin Lô đất" : "Thêm Lô đất mới"}
     >
-      {/* CHỌN NÔNG TRẠI */}
       <View className="mb-4">
         <Text className="text-gray-700 font-bold mb-2 text-[15px]">
           Thuộc nông trại <Text className="text-red-500">*</Text>

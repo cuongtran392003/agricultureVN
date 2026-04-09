@@ -4,3 +4,9 @@ export interface CreatePlotDto {
     name: string;
     description: string;
 }
+
+export interface UpdatePlot {
+    name: string;
+    description: string;
+    farmId: string;
+}

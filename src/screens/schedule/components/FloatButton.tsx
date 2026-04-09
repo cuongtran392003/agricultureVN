@@ -17,7 +17,8 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+
 
 export const FloatButton = () => {
   const router = useRouter();
@@ -56,11 +57,11 @@ export const FloatButton = () => {
 
       <View className="absolute bottom-6 right-6 z-50 items-end">
         {isOpen && (
-          <View className="items-end mb-4 gap-4 pr-1">
-            <Animated.View
-              entering={FadeInDown.delay(100)}
-              exiting={FadeOutDown}
-            >
+          <Animated.View
+            entering={FadeIn.delay(100)}
+            exiting={FadeOut.delay(100)}
+            className="items-end mb-4 gap-4 pr-1">
+            <View>
               <TouchableOpacity
                 className="flex-row items-center gap-3"
                 onPress={() => handleNavigate("/add-task")}
@@ -78,12 +79,9 @@ export const FloatButton = () => {
                   />
                 </View>
               </TouchableOpacity>
-            </Animated.View>
+            </View>
 
-            <Animated.View
-              entering={FadeInDown.delay(50)}
-              exiting={FadeOutDown}
-            >
+            <View>
               <TouchableOpacity
                 className="flex-row items-center gap-3"
                 onPress={() => setIsModalVisible(true)}
@@ -101,9 +99,9 @@ export const FloatButton = () => {
                   />
                 </View>
               </TouchableOpacity>
-            </Animated.View>
+            </View>
 
-            <Animated.View entering={FadeInDown} exiting={FadeOutDown}>
+            <View>
               <TouchableOpacity
                 className="flex-row items-center gap-3"
                 onPress={() => setIsModalVisibleFarm(true)}
@@ -121,8 +119,8 @@ export const FloatButton = () => {
                   />
                 </View>
               </TouchableOpacity>
-            </Animated.View>
-          </View>
+            </View>
+          </Animated.View>
         )}
 
         <Button

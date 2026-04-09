@@ -5,7 +5,7 @@ import { getPriceService } from "@/services/service.price";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { FlatList, RefreshControl, Text, View } from "react-native";
-import Animated, { FadeInUp } from "react-native-reanimated";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AgriNewsCard } from "./components/AgriNewsCard";
 import { MarketHeader } from "./components/MarketHeader";
@@ -115,11 +115,7 @@ export const MarketScreen = () => {
             }
             ListFooterComponent={<AgriNewsCard />}
             renderItem={({ item, index }) => (
-              <Animated.View
-                entering={FadeInUp.delay(100 + index * 50)
-                  .springify()
-                  .damping(15)
-                  .stiffness(100)}
+              <View
                 style={{ width: "48%" }}
               >
                 <MarketPriceCard
@@ -128,7 +124,7 @@ export const MarketScreen = () => {
                   change={item.change}
                   history={item.history || []}
                 />
-              </Animated.View>
+              </View>
             )}
           />
         )}

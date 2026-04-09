@@ -16,7 +16,7 @@ import {
 import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import Animated, { FadeInUp } from "react-native-reanimated";
+
 import { ModalManage } from "./components/ModalManage";
 
 // Mô phỏng interface dựa trên DTO của bạn
@@ -157,11 +157,8 @@ export const ManageFarmScreen = ({ visibleFarm, onCloseFarm }: ManageFarmScreenP
           </Text>
         ) : (
           farms.map((farm: Farm, index: number) => (
-            <Animated.View
+            <View
               key={farm._id}
-              entering={FadeInUp.delay(index * 100)
-                .springify()
-                .damping(15)}
               className="bg-white rounded-[16px] mb-4 p-4 shadow-sm border border-gray-100"
             >
               <View className="flex-row items-start mb-4">
@@ -223,7 +220,7 @@ export const ManageFarmScreen = ({ visibleFarm, onCloseFarm }: ManageFarmScreenP
                   <Text className="text-red-500 font-bold ml-2">Xóa</Text>
                 </TouchableOpacity>
               </View>
-            </Animated.View>
+            </View>
           ))
         )}
       </ScrollView>

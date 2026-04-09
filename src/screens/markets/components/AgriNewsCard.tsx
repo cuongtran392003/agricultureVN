@@ -4,7 +4,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { CompactArticleCard } from "../common/CompactArticleCard";
 import { FeaturedCard } from "../common/FeaturedCard";
 import { ExpertChatButton } from "../common/ExpertChatButton";
-import Animated, { FadeInUp } from "react-native-reanimated";
+
 
 const sampleArticles = [
   {
@@ -37,27 +37,23 @@ export const AgriNewsCard = () => {
         </TouchableOpacity>
       </View>
 
-      <Animated.View entering={FadeInUp.delay(500).springify().damping(15).stiffness(100)}>
+      <View>
         <FeaturedCard />
-      </Animated.View>
+      </View>
       {sampleArticles.map((article, index) => (
-        <Animated.View
+        <View
           key={index}
-          entering={FadeInUp.delay(600 + index * 100)
-            .springify()
-            .damping(15)
-            .stiffness(100)}
         >
           <CompactArticleCard
             title={article.title}
             time={article.time}
             image={article.image}
           />
-        </Animated.View>
+        </View>
       ))}
-      <Animated.View entering={FadeInUp.delay(800).springify().damping(15).stiffness(100)}>
+      <View>
         <ExpertChatButton />
-      </Animated.View>
+      </View>
     </View>
   );
 };

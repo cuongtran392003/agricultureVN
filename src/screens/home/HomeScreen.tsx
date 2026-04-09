@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Animated, { FadeInUp } from "react-native-reanimated";
+
 import { FarmMetricCard } from "./common/FarmMetricCard";
 import { TaskItem } from "./common/TaskItem";
 import { FarmHealthCard } from "./components/FarmHealthCard ";
@@ -94,11 +94,7 @@ export default function HomeScreen() {
           }
         >
           {data && (
-            <Animated.View
-              entering={FadeInUp.delay(100)
-                .springify()
-                .damping(15)
-                .stiffness(100)}
+            <View
             >
               <WeatherCard
                 location={data?.name}
@@ -108,23 +104,15 @@ export default function HomeScreen() {
                 description={data?.weather[0]?.description}
                 icon={data?.weather[0]?.icon}
               />
-            </Animated.View>
+            </View>
           )}
 
-          <Animated.View
-            entering={FadeInUp.delay(200)
-              .springify()
-              .damping(15)
-              .stiffness(100)}
+          <View
           >
             <FarmHealthCard />
-          </Animated.View>
+          </View>
 
-          <Animated.View
-            entering={FadeInUp.delay(300)
-              .springify()
-              .damping(15)
-              .stiffness(100)}
+          <View
             className="mt-5 flex-row justify-between"
           >
             {farmMetricsData.map((item, index) => {
@@ -141,13 +129,9 @@ export default function HomeScreen() {
                 />
               );
             })}
-          </Animated.View>
+          </View>
 
-          <Animated.View
-            entering={FadeInUp.delay(400)
-              .springify()
-              .damping(15)
-              .stiffness(100)}
+          <View
             className="flex-row justify-between items-center mt-6 mb-2 w-full"
           >
             <Text
@@ -166,20 +150,16 @@ export default function HomeScreen() {
                 Xem tất cả
               </Text>
             </TouchableOpacity>
-          </Animated.View>
+          </View>
 
           {taskData &&
             taskData?.data &&
             taskData?.data?.map((task: TaskResponse, index: number) => (
-              <Animated.View
+              <View
                 key={index}
-                entering={FadeInUp.delay(500 + index * 100)
-                  .springify()
-                  .damping(15)
-                  .stiffness(100)}
               >
                 <TaskItem nameWork={task.title} note={task.note} />
-              </Animated.View>
+              </View>
             ))}
         </ScrollView>
       )}
