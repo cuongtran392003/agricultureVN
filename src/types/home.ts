@@ -13,4 +13,7 @@ export interface FarmMetricCardProps {
 export interface TaskItemProps {
   nameWork: string;
   note: string;
+  id: string;
+  status: string;
+  onPress?: () => void;
 }

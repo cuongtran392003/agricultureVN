@@ -29,7 +29,12 @@ export const SettingScreen = () => {
         contentContainerStyle={{ paddingBottom: 16 }}
       >
         <ProfileHeader id={user?._id} name={user?.name} />
-        <ProfileInfo name={user?.name} />
+        <ProfileInfo
+          name={user?.name}
+          onPress={() => {
+            router.push("/auth/profile" as any);
+          }}
+        />
         <NotificationSettings />
         <GeneralSettings />
         <LogoutButton onLogout={handleLogout} />

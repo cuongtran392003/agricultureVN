@@ -64,7 +64,7 @@ export const FloatButton = () => {
             <View>
               <TouchableOpacity
                 className="flex-row items-center gap-3"
-                onPress={() => handleNavigate("/add-task")}
+                onPress={() => handleNavigate("task/add-task")}
               >
                 <View className="bg-white px-4 py-2 rounded-[12px] shadow-sm">
                   <Text className="font-bold text-gray-700 text-[16px]">

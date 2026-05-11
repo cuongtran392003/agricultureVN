@@ -9,7 +9,6 @@ type HomeHeaderProps = {
 
 export const HomeHeader = (props: HomeHeaderProps) => {
   const { user } = useAuthStore();
-  console.log(">>> check user", user);
   return (
     <View
       className="flex-row items-center justify-between px-[24px] py-[16px] rounded-b-[20px]"

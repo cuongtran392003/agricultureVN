@@ -24,7 +24,8 @@
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
       ],
-      "package": "com.cuong2003.agricultureVN"
+      "package": "com.cuong2003.agricultureVN",
+      "googleServicesFile": "./android/app/google-services.json"
     },
     "web": {
       "output": "static",

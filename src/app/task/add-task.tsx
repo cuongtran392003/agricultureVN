@@ -38,7 +38,7 @@ type TaskFormValue = {
   priority: string;
   imageUrl: string;
   note: string;
-}
+};
 
 export default function AddTaskScreen() {
   const router = useRouter();
@@ -48,6 +48,7 @@ export default function AddTaskScreen() {
     control,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<TaskFormValue>({
     defaultValues: {
@@ -76,17 +77,19 @@ export default function AddTaskScreen() {
     { label: "Hủy", value: "cancelled" },
   ];
 
-  const selectedFarmId = watch('farmId')
+  const selectedFarmId = watch("farmId");
+
+  React.useEffect(() => {
+    setValue("plotId", "");
+  }, [selectedFarmId, setValue]);
 
   const { data: dataPlot } = usePlot();
   const { data: dataFarm } = useFarm();
-  const { user } = useAuthStore()
+  const { user } = useAuthStore();
   const [show, setShow] = useState(false);
   const [showTime, setShowTime] = useState(false);
 
   const { mutateAsync: createTask } = useCreateTask();
-
-
 
   const onSubmit = async (data: TaskFormValue) => {
     try {
@@ -96,19 +99,21 @@ export default function AddTaskScreen() {
         return;
       }
 
+      const { imageUrl, ...restData } = data;
+
       const formattedData: CreateTaskDto = {
-        ...data,
+        ...restData,
         userId: userId,
         scheduledDate: data.scheduledDate.toISOString(),
-        scheduledTime: data.scheduledTime.toISOString()
-      }
+        scheduledTime: data.scheduledTime.toISOString(),
+      };
       await createTask(formattedData);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       Alert.alert("Thành công", "Thêm công việc thành công", [
         { text: "OK", onPress: () => router.back() },
       ]);
     } catch (error) {
-      console.log(error);
+      console.log("check error create task", error);
     }
   };
 
@@ -176,44 +181,72 @@ export default function AddTaskScreen() {
             {/* Farm & Plot Selection (Mock UI) */}
             <View className="flex-row gap-4 justify-between">
               <View className="flex-1">
-                <Text className="font-bold mb-2">Nông trại</Text>
+                <Text className="font-bold mb-2">
+                  Nông trại <Text className="text-red-500">*</Text>
+                </Text>
                 <Controller
                   control={control}
                   name="farmId"
                   rules={{ required: "Vui lòng chọn nông trại" }}
                   render={({ field: { onChange, value } }) => (
-                    <View className="bg-white rounded-xl border border-gray-100">
+                    <View className={`bg-white rounded-xl border ${errors.farmId ? "border-red-500" : "border-gray-100"}`}>
                       <Picker selectedValue={value} onValueChange={onChange}>
                         <Picker.Item label="Chọn nông trại" value="" />
                         {dataFarm?.data?.map((item: any) => {
                           return (
-                            <Picker.Item label={item.name} value={item._id} />
+                            <Picker.Item
+                              key={item._id}
+                              label={item.name}
+                              value={item._id}
+                            />
                           );
                         })}
                       </Picker>
                     </View>
                   )}
                 />
+                {errors.farmId && (
+                  <Text className="text-red-500 text-xs mt-1">
+                    {errors.farmId.message}
+                  </Text>
+                )}
               </View>
               <View className="flex-1">
-                <Text className="font-bold mb-2">Lô đất</Text>
+                <Text className="font-bold mb-2">
+                  Lô đất <Text className="text-red-500">*</Text>
+                </Text>
                 <Controller
                   control={control}
                   name="plotId"
                   rules={{ required: "Vui lòng chọn lô đất" }}
                   render={({ field: { onChange, value } }) => (
-                    <View className="bg-white rounded-xl border border-gray-100">
+                    <View className={`bg-white rounded-xl border ${errors.plotId ? "border-red-500" : "border-gray-100"}`}>
                       <Picker selectedValue={value} onValueChange={onChange}>
                         <Picker.Item label="Chọn lô đất" value={""} />
-                        {dataPlot?.data?.filter((plot: any) => plot.farmId === selectedFarmId || plot.farmId?._id === selectedFarmId).map((item: any) => {
-                          return (
-                            <Picker.Item label={item.name} value={item._id} />
-                          );
-                        })}
+                        {dataPlot?.data
+                          ?.filter(
+                            (plot: any) =>
+                              plot.farmId === selectedFarmId ||
+                              plot.farmId?._id === selectedFarmId,
+                          )
+                          .map((item: any) => {
+                            return (
+                              <Picker.Item
+                                key={item._id}
+                                label={item.name}
+                                value={item._id}
+                              />
+                            );
+                          })}
                       </Picker>
                     </View>
                   )}
                 />
+                {errors.plotId && (
+                  <Text className="text-red-500 text-xs mt-1">
+                    {errors.plotId.message}
+                  </Text>
+                )}
               </View>
             </View>
 
@@ -321,8 +354,14 @@ export default function AddTaskScreen() {
                       const isActive = value === p.value;
                       return (
                         <TouchableOpacity
+                          activeOpacity={0.8}
                           key={p.value}
-                          onPress={() => onChange(p.value)}
+                          onPress={() => {
+                            Haptics.impactAsync(
+                              Haptics.ImpactFeedbackStyle.Light,
+                            );
+                            onChange(p.value);
+                          }}
                           className="flex-1 py-3 rounded-xl items-center border"
                           style={{
                             backgroundColor: isActive ? p.color : "white",
@@ -357,6 +396,7 @@ export default function AddTaskScreen() {
                       const isActive = value === s.value;
                       return (
                         <TouchableOpacity
+                          activeOpacity={0.9}
                           key={s.value}
                           onPress={() => onChange(s.value)}
                           className="px-4 py-2 rounded-full border border-gray-200"

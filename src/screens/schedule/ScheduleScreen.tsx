@@ -4,13 +4,14 @@ import {
   useGetAllTask,
   useUpdateTask,
 } from "@/hooks/api/tasks/useTask";
-import { TaskResponse } from "@/types/tasks";
+import { Task } from "@/types/tasks";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import { Alert, ScrollView, Text, View } from "react-native";
 
+import { useRouter } from "expo-router";
 import { TaskSummaryCard } from "./common/TaskSummaryCard";
 import { FloatButton } from "./components/FloatButton";
 import { ScheduleHeader } from "./components/SheduleHeader";
@@ -23,14 +24,15 @@ dayjs.locale("vi");
 export const ScheduleScreen = () => {
   const [now, setNow] = useState(dayjs());
   const [selectedDate, setSelectedDate] = useState(dayjs());
-  const { data: dataTask } = useGetAllTask();
+  const { data: dataTask } = useGetAllTask({ limit: 3 });
   const { mutateAsync: updateTask } = useUpdateTask();
   const { mutateAsync: deleteTask } = useDeleteTask();
+  const router = useRouter();
 
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(dayjs());
-    }, 60000); // Cập nhật mỗi 60 giây
+    }, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -38,25 +40,23 @@ export const ScheduleScreen = () => {
 
   const tasksToday =
     dataTask?.data?.filter(
-      (task: TaskResponse) =>
+      (task: Task) =>
         dayjs(task.scheduledDate).format("dddd, DD/MM") === dateLabel,
     ) || [];
 
   const upcomingTasks =
-    dataTask?.data?.filter((task: TaskResponse) =>
+    dataTask?.data?.filter((task: Task) =>
       dayjs(task.scheduledDate).isAfter(selectedDate, "day"),
     ) || [];
 
   const totalCompleted =
-    tasksToday.filter((task: TaskResponse) => task.status === "completed")
-      .length || 0;
+    tasksToday.filter((task: Task) => task.status === "completed").length || 0;
   const totalPending =
-    tasksToday.filter((task: TaskResponse) => task.status === "pending")
-      .length || 0;
+    tasksToday.filter((task: Task) => task.status === "pending").length || 0;
 
   const handleOnMarkDown = async (id: string) => {
     try {
-      await updateTask({id, status: "completed" });
+      await updateTask({ id, status: "completed" });
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       Alert.alert("Thành công", "Hoàn thành công việc");
     } catch (error) {
@@ -101,15 +101,11 @@ export const ScheduleScreen = () => {
             onDateSelect={(dateStr) => setSelectedDate(dayjs(dateStr))}
           />
         </View>
-        <View
-          className="flex-row w-full justify-between mt-5"
-        >
+        <View className="flex-row w-full justify-between mt-5">
           <TaskSummaryCard label="completed" totalTasks={totalCompleted} />
           <TaskSummaryCard label="pending" totalTasks={totalPending} />
         </View>
-        <View
-          className="flex-row w-full justify-between items-center mt-5"
-        >
+        <View className="flex-row w-full justify-between items-center mt-5">
           <Text className="font-bold text-[18px]">Nhiệm vụ hôm nay</Text>
           <View className="p-2 bg-[#EDE6DE] rounded-full">
             <Text
@@ -127,12 +123,18 @@ export const ScheduleScreen = () => {
           </Text>
         )}
 
-        {tasksToday.map((task: TaskResponse, index: number) => {
+        {tasksToday.map((task: Task, index: number) => {
           return (
-            <View
-              key={`today-${index}`}
-            >
+            <View key={`today-${index}`}>
               <TaskTodaySchedule
+                onPress={() =>
+                  router.push({
+                    pathname: "/task/[id]",
+                    params: {
+                      id: task._id,
+                    },
+                  })
+                }
                 title={task.title}
                 subtitle={task.plotId?.name || ""}
                 time={task.scheduledTime}
@@ -153,24 +155,28 @@ export const ScheduleScreen = () => {
             </View>
           );
         })}
-        <View
-          className="w-full mt-6"
-        >
+        <View className="w-full mt-6">
           <Text className="font-bold text-[18px]">Công việc sắp tới</Text>
           {upcomingTasks.length === 0 && (
             <Text className="text-gray-500 mt-4 text-center">
               Không có công việc sắp tới
             </Text>
           )}
-          {upcomingTasks.map((task: TaskResponse, index: number) => {
+          {upcomingTasks.map((task: Task, index: number) => {
             return (
-              <View
-                key={`upcoming-${index}`}
-              >
+              <View key={`upcoming-${index}`}>
                 <UpcomingTask
                   title={task?.title}
                   subTitle={task?.plotId?.name}
                   time={task?.scheduledTime}
+                  onPress={() => {
+                    router.push({
+                      pathname: "/task/[id]",
+                      params: {
+                        id: task._id,
+                      },
+                    });
+                  }}
                 />
               </View>
             );

@@ -35,7 +35,6 @@ type ManageFarmScreenProp = {
 
 export const ManageFarmScreen = ({ visibleFarm, onCloseFarm }: ManageFarmScreenProp) => {
   const { user } = useAuthStore();
-  console.log(">>> check user", user);
   const { data: farmResponse } = useFarm();
   const { mutateAsync: addFarm } = useAddFarm();
   const { mutateAsync: deleteFarm } = useDeleteFarm();

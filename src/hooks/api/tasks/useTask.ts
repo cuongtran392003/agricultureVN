@@ -1,19 +1,35 @@
 import { createTask } from "@/services/tasks/createTask.service";
 import { deleteTask } from "@/services/tasks/deleteTask.service";
-import { getAllTasks } from "@/services/tasks/getAllTask.service";
+import { getAllTasks, TaskParams } from "@/services/tasks/getAllTask.service";
+import { getTaskById } from "@/services/tasks/getTaskById.service";
 import { updateTask } from "@/services/tasks/updateTask.service";
-import { CreateTaskDto, UpdateTaskDto } from "@/types/tasks";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { CreateTaskDto } from "@/types/tasks";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { Alert } from "react-native";
 
-export const useGetAllTask = () => {
+export const useGetAllTask = (params: TaskParams) => {
   return useQuery({
-    queryKey: ["tasks"],
+    queryKey: ["tasks", params],
     queryFn: async () => {
-      const tasks = await getAllTasks();
+      const tasks = await getAllTasks(params);
       return tasks;
     },
-    staleTime: 1000 * 60,
+    placeholderData: keepPreviousData,
+  });
+};
+
+export const useGetTaskById = (id: string) => {
+  return useQuery({
+    queryKey: ["task", id],
+    queryFn: async () => {
+      const task = await getTaskById(id);
+      return task;
+    },
   });
 };
 
@@ -34,22 +50,22 @@ export const useCreateTask = () => {
   });
 };
 
-
 export const useUpdateTask = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({id,status}:{id: string,status: string}) => {
-      const task = await updateTask(id, {status});
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      const task = await updateTask(id, { status });
       return task;
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["task", variables.id] });
     },
     onError: () => {
       Alert.alert("Thất bại", "Cập nhật công việc thất bại");
     },
   });
-}
+};
 
 export const useDeleteTask = () => {
   const queryClient = useQueryClient();
@@ -64,5 +80,5 @@ export const useDeleteTask = () => {
     onError: () => {
       Alert.alert("Thất bại", "Xóa công việc thất bại");
     },
-  }); 
-}
+  });
+};

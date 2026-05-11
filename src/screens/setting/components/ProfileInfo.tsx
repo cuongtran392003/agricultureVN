@@ -5,8 +5,9 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 type Props = {
   name?: string;
+  onPress: () => void;
 };
-export const ProfileInfo = ({name}:Props) => {
+export const ProfileInfo = ({ name, onPress }: Props) => {
   return (
     <View className="px-[24px]">
       <Text
@@ -17,7 +18,10 @@ export const ProfileInfo = ({name}:Props) => {
       </Text>
       <Card className="rounded-[12px]">
         {/* Họ và tên */}
-        <TouchableOpacity className="flex-row items-center justify-between p-3">
+        <TouchableOpacity
+          className="flex-row items-center justify-between p-3"
+          onPress={onPress}
+        >
           <View className="flex-row gap-3 items-center flex-1">
             <View
               className="w-[40px] h-[40px] items-center justify-center rounded-full"

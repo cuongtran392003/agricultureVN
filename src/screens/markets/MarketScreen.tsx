@@ -6,6 +6,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { FlatList, RefreshControl, Text, View } from "react-native";
 
+import { formatDate, formatTime } from "@/utils/formatTimeDate";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AgriNewsCard } from "./components/AgriNewsCard";
 import { MarketHeader } from "./components/MarketHeader";
@@ -23,6 +24,9 @@ export const MarketScreen = () => {
   const [data, setData] = useState<PriceItems[]>([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
+  const dateTime = formatTime(new Date());
+  const labelDate = formatDate(new Date());
 
   const getPrices = async () => {
     try {
@@ -97,27 +101,26 @@ export const MarketScreen = () => {
             }
             ListHeaderComponent={
               <>
-                <View className="w-full flex-row items-center justify-between">
+                <View className="w-full flex-row items-end justify-between mb-2 mt-2">
                   <Text
-                    className="text-[18px] font-bold"
+                    className="text-[18px] font-bold flex-1 mr-2"
                     style={{ color: Colors.forestgreen }}
+                    numberOfLines={2}
                   >
                     Giá nông sản hôm nay
                   </Text>
                   <Text
-                    className="text-[14px] flex-shrink-1 text-right ml-2"
+                    className="text-[12px] text-right mb-[2px] flex-shrink-0"
                     style={{ color: Colors.brownearth }}
                   >
-                    Cập nhật: 9:30, 24/05/2026
+                    Cập nhật: {dateTime} {labelDate}
                   </Text>
                 </View>
               </>
             }
             ListFooterComponent={<AgriNewsCard />}
             renderItem={({ item, index }) => (
-              <View
-                style={{ width: "48%" }}
-              >
+              <View style={{ width: "48%" }}>
                 <MarketPriceCard
                   name={item.name}
                   price={item.price}

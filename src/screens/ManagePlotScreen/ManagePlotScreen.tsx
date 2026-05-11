@@ -1,10 +1,10 @@
 import { ManageModal } from "@/components/common/ManageModal";
 import { Colors } from "@/constant/Colors";
 import {
-    useCreatePlot,
-    useDeletePlot,
-    usePlot,
-    useUpdatePlot,
+  useCreatePlot,
+  useDeletePlot,
+  usePlot,
+  useUpdatePlot,
 } from "@/hooks/api/plot/usePlot"; // Chú ý kiểm tra lại đường dẫn hook của bạn
 import { useAuthStore } from "@/stores/authStore";
 import { Feather, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
@@ -151,10 +151,17 @@ export const ManagePlotScreen = ({
         contentContainerStyle={{ padding: 16 }}
         showsVerticalScrollIndicator={false}
       >
-        <View className="mb-4">
-          <Text className="text-gray-600 font-bold mb-3 text-[15px]">
-            📍 Xem lô đất của Nông trại:
-          </Text>
+        <View className="mb-4 ">
+          <View className="flex-row items-center gap-2 mb-2">
+            <FontAwesome
+              name="location-arrow"
+              size={18}
+              color={Colors.forestgreen}
+            />
+            <Text className="text-gray-600 font-bold text-[15px]">
+              Xem lô đất của Nông trại:
+            </Text>
+          </View>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -165,22 +172,25 @@ export const ManagePlotScreen = ({
               return (
                 <TouchableOpacity
                   key={farm._id}
+                  activeOpacity={0.8}
                   onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    setFarmId(farm._id);
+                    setTimeout(() => setFarmId(farm._id), 0);
                   }}
                   className="rounded-full px-5 py-2.5 mr-3 flex-row items-center"
                   style={{
                     backgroundColor: isSelected
-                      ? Colors.forestgreen
-                      : "#F3F4F6",
-                    borderColor: isSelected ? Colors.forestgreen : "#E5E7EB",
+                      ? Colors.leafgreen
+                      : Colors.brandorange,
+                    borderColor: isSelected
+                      ? Colors.leafgreen
+                      : Colors.brandorange,
                     borderWidth: 1,
                   }}
                 >
                   <Text
                     className="font-bold text-[15px]"
-                    style={{ color: isSelected ? "white" : "#4B5563" }}
+                    style={{ color: isSelected ? "white" : "white" }}
                   >
                     {farm.name}
                   </Text>

@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { router } from "expo-router";
 
 // const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL_PRODUCTION;
 const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
@@ -67,19 +68,22 @@ axiosInstance.interceptors.response.use(
       if (newAccessToken) {
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
+      } else {
+        // Nếu không lấy được token mới -> Hết phiên đăng nhập -> Đá về Login
+        router.replace("/login" as any);
       }
     }
 
-    // Log lỗi cho các trường hợp khác
+    // Log lỗi cho các trường hợp khác (Dùng console.warn thay vì console.error để tránh văng màn hình đỏ)
     if (error.response) {
-      console.error(
+      console.warn(
         `[API Error] ${error.response.status}:`,
         error.response.data,
       );
     } else if (error.request) {
-      console.error("[API Error] Không nhận được phản hồi từ server");
+      console.warn("[API Error] Không nhận được phản hồi từ server");
     } else {
-      console.error("[API Error]", error.message);
+      console.warn("[API Error]", error.message);
     }
 
     return Promise.reject(error);

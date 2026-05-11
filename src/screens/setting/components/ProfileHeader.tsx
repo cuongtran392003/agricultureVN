@@ -1,25 +1,23 @@
 import { Colors } from "@/constant/Colors";
 import { FontAwesome } from "@expo/vector-icons";
-import { ICONS } from "assets/icons";
-import { Image, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 type Props = {
   id?: string;
   name?: string;
-}
-export const ProfileHeader = ({id,name}:Props) => {
+};
+export const ProfileHeader = ({ id, name }: Props) => {
   return (
     <View className="items-center justify-center gap-2 mt-4 mb-4">
       {/* Avatar with camera icon */}
       <View className="relative">
         <View
-          className="w-[112px] h-[112px] rounded-full"
-          style={{ borderWidth: 2, borderColor: Colors.forestgreen }}
+          className="w-[100px] h-[100px] rounded-full items-center justify-center mb-4 shadow-sm"
+          style={{ backgroundColor: Colors.leafgreen || "#22C55E" }}
         >
-          <Image
-            source={ICONS.iconAvatar}
-            className="w-full h-full rounded-full"
-          />
+          <Text className="text-[40px] font-bold text-white uppercase">
+            {name?.charAt(0) || "U"}
+          </Text>
         </View>
         {/* Camera icon overlay */}
         <View
@@ -35,9 +33,7 @@ export const ProfileHeader = ({id,name}:Props) => {
       </View>
 
       {/* Name */}
-      <Text className="font-bold text-[20px] text-center">
-        {name}
-      </Text>
+      <Text className="font-bold text-[20px] text-center">{name}</Text>
 
       {/* Crop type subtitle */}
       <Text

@@ -11,12 +11,13 @@ import {
   View,
 } from "react-native";
 
+import { Task } from "@/types/tasks";
+import { useRouter } from "expo-router";
 import { FarmMetricCard } from "./common/FarmMetricCard";
 import { TaskItem } from "./common/TaskItem";
 import { FarmHealthCard } from "./components/FarmHealthCard ";
 import { HomeHeader } from "./components/HomeHeader";
 import { WeatherCard } from "./components/WeatherCard";
-import { TaskResponse } from "../../types/tasks";
 
 const farmMetricsData = [
   {
@@ -57,12 +58,25 @@ type WeatherData = {
 
 export default function HomeScreen() {
   const { data, isLoading, refetch, isRefetching } = useWeather();
+
   const {
     data: taskData,
     isLoading: taskLoading,
     refetch: taskRefetch,
     isRefetching: taskIsRefetching,
-  } = useGetAllTask();
+  } = useGetAllTask({ limit: 3 });
+
+  const router = useRouter();
+
+  const taskToday = taskData?.data?.filter((task: Task) => {
+    const today = new Date();
+    const taskDate = new Date(task.scheduledDate);
+    return (
+      taskDate.getDate() === today.getDate() &&
+      taskDate.getMonth() === today.getMonth() &&
+      taskDate.getFullYear() === today.getFullYear()
+    );
+  });
 
   return (
     <View style={{ flex: 1, backgroundColor: "transparent" }}>
@@ -94,8 +108,7 @@ export default function HomeScreen() {
           }
         >
           {data && (
-            <View
-            >
+            <View>
               <WeatherCard
                 location={data?.name}
                 temperature={Math.round(data.main.temp)}
@@ -107,14 +120,11 @@ export default function HomeScreen() {
             </View>
           )}
 
-          <View
-          >
+          <View>
             <FarmHealthCard />
           </View>
 
-          <View
-            className="mt-5 flex-row justify-between"
-          >
+          <View className="mt-5 flex-row justify-between">
             {farmMetricsData.map((item, index) => {
               const value =
                 item.name === "Độ ẩm đất"
@@ -131,9 +141,7 @@ export default function HomeScreen() {
             })}
           </View>
 
-          <View
-            className="flex-row justify-between items-center mt-6 mb-2 w-full"
-          >
+          <View className="flex-row justify-between items-center mt-6 mb-2 w-full">
             <Text
               className="font-bold text-[20px]"
               style={{ color: Colors.brownearth }}
@@ -141,6 +149,7 @@ export default function HomeScreen() {
               Công việc hôm nay
             </Text>
             <TouchableOpacity
+              onPress={() => router.push("/task/tasklist")}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <Text
@@ -152,15 +161,32 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
-          {taskData &&
-            taskData?.data &&
-            taskData?.data?.map((task: TaskResponse, index: number) => (
-              <View
-                key={index}
-              >
-                <TaskItem nameWork={task.title} note={task.note} />
+          {taskLoading ? (
+            <>
+              <Skeleton width="100%" height={80} borderRadius={16} />
+              <Skeleton width="100%" height={80} borderRadius={16} />
+              <Skeleton width="100%" height={80} borderRadius={16} />
+            </>
+          ) : (
+            taskToday?.map((task: Task, index: number) => (
+              <View key={task._id}>
+                <TaskItem
+                  status={task.status}
+                  nameWork={task.title}
+                  note={task.note}
+                  id={task._id}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/task/[id]",
+                      params: {
+                        id: task._id,
+                      },
+                    })
+                  }
+                />
               </View>
-            ))}
+            ))
+          )}
         </ScrollView>
       )}
     </View>

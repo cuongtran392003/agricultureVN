@@ -1,17 +1,19 @@
 import { Card } from "@/components/ui/card";
 import { Colors } from "@/constant/Colors";
 import { formatTime } from "@/utils/formatTimeDate";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 type UpcomingTaskProps = {
     title: string;
     subTitle: string;
     time: string;
+    onPress:() => void;
 }
 
-export const UpcomingTask = ({ title, subTitle, time }: UpcomingTaskProps) => {
+export const UpcomingTask = ({ title, subTitle, time, onPress }: UpcomingTaskProps) => {
   return (
-    <View
+    <TouchableOpacity
+    onPress={onPress}
       className="w-full mt-3 rounded-[16px] p-4 bg-[#F8F9FA] flex-row items-center justify-between"
       style={{
         borderWidth: 1,
@@ -37,6 +39,6 @@ export const UpcomingTask = ({ title, subTitle, time }: UpcomingTaskProps) => {
           {formatTime(new Date(time))}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };

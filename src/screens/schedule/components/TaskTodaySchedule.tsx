@@ -14,6 +14,7 @@ type TaskTodayScheduleProps = {
   onMarkDone: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  onPress:() =>void;
 };
 
 export const TaskTodaySchedule = ({
@@ -25,9 +26,11 @@ export const TaskTodaySchedule = ({
   onMarkDone,
   onEdit,
   onDelete,
+  onPress
 }: TaskTodayScheduleProps) => {
   return (
-    <View
+    <TouchableOpacity
+    onPress={onPress}
       className="w-full mt-4 bg-white"
       style={{
         borderLeftWidth: 6,
@@ -51,14 +54,7 @@ export const TaskTodaySchedule = ({
         overflow: "hidden",
       }}
     >
-      <View className=" flex-row justify-around gap-2 items-center p-[16px]">
-        <View className="w-[56px] h-[56px] p-[8px] rounded-[12px] bg-[#EDE6DE]">
-          <Image
-            source={ICONS.iconAvatar}
-            className="rounded-[12px]"
-            style={{ width: "100%", height: "100%" }}
-          />
-        </View>
+      <View className=" flex-row gap-2 items-center p-[16px]">
         <View className="flex-1 ml-3 gap-2">
           <Text className="font-bold text-[18px]" numberOfLines={1}>
             {title}
@@ -88,7 +84,8 @@ export const TaskTodaySchedule = ({
       <View className="bg-[#F9FAFB] p-[16px] flex-row items-center justify-between rounded-[12px]">
         {status === "pending" ? (
           <TouchableOpacity
-            className="px-[16px] py-[8px] rounded-[12px] bg-[#F2F7F4] w[50%]"
+            className="px-[16px] py-[8px] rounded-[12px] w[50%]"
+            style={{ backgroundColor: Colors.leafgreen }}
             onPress={() => {
               Haptics.notificationAsync(
                 Haptics.NotificationFeedbackType.Success,
@@ -96,7 +93,7 @@ export const TaskTodaySchedule = ({
               onMarkDone();
             }}
           >
-            <Text className="font-bold">Đánh dấu xong</Text>
+            <Text className="font-bold text-white">Đánh dấu xong</Text>
           </TouchableOpacity>
         ) : null}
         {status === "pending" ? (
@@ -134,10 +131,8 @@ export const TaskTodaySchedule = ({
               </Text>
             </TouchableOpacity>
           </View>
-        ) : (
-          null
-        )}
+        ) : null}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };

@@ -1,4 +1,4 @@
-export interface TaskResponse {
+export interface Task {
   _id: string;
   farmId: {
     _id: string;

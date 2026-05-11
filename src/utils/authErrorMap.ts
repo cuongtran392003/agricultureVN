@@ -5,6 +5,6 @@ export const mapAuthError = (error: string) => {
         case 'Invalid credentials':
             return 'Email hoặc mật khẩu không chính xác'
         default:
-            return 'Đã có lỗi xảy ra'
+            return error
     }
 }

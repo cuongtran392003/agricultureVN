@@ -12,7 +12,6 @@ import { Input, InputField } from "@/components/ui/input";
 import { VStack } from "@/components/ui/vstack";
 import { Colors } from "@/constant/Colors";
 import { useLogin } from "@/hooks/useAuth";
-import { mapAuthError } from "@/utils/authErrorMap";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -21,8 +20,10 @@ import { Alert } from "react-native";
 export const FormLogin = () => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [inputValueEmail, setInputValueEmail] = useState<string>("");
-  const [inputValuePassword, setInputValuePassword] = useState<string>("");
+  const [inputValueEmail, setInputValueEmail] =
+    useState<string>("testapp@gmail.com");
+  const [inputValuePassword, setInputValuePassword] =
+    useState<string>("123456");
   const [showPassword, setShowPassWord] = useState<boolean>(false);
   const router = useRouter();
   const { mutateAsync: login, isPending } = useLogin();
@@ -47,10 +48,7 @@ export const FormLogin = () => {
       await login({ email, password });
       router.replace("/(tabs)/home");
     } catch (error: any) {
-      const message = mapAuthError(error.message);
-      Alert.alert("Lỗi", message);
-      setEmailError(true);
-      setPasswordError(true);
+      Alert.alert("Email hoặc mật khẩu không đúng");
     }
   };
   return (
@@ -85,7 +83,10 @@ export const FormLogin = () => {
         isReadOnly={false}
         isRequired={false}
       >
-        <Input className="my-1 flex-row items-center justify-between pr-2 h-[58px] rounded-[12px] bg-[#F8FAFC]" size="lg">
+        <Input
+          className="my-1 flex-row items-center justify-between pr-2 h-[58px] rounded-[12px] bg-[#F8FAFC]"
+          size="lg"
+        >
           <InputField
             type={showPassword ? "text" : "password"}
             placeholder="Nhập mật khẩu"
@@ -100,7 +101,11 @@ export const FormLogin = () => {
             {showPassword ? (
               <FontAwesome name="eye" size={24} color={Colors.forestgreen} />
             ) : (
-              <FontAwesome name="eye-slash" size={24} color={Colors.forestgreen} />
+              <FontAwesome
+                name="eye-slash"
+                size={24}
+                color={Colors.forestgreen}
+              />
             )}
           </Button>
         </Input>
