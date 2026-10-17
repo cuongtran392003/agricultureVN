@@ -1,58 +1,30 @@
-import { Button, ButtonText } from "@/components/ui/button";
+import { AppHeader } from "@/components/common/AppHeader";
+import { Colors } from "@/constant/Colors";
 import { FormLogin } from "@/screens/login/FormLogin";
-import { ICONS } from "assets/icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { Image, Text, View } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Login() {
   const router = useRouter();
-  return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="relative">
-        <View
-          className="w-[85px] h-[90px] bg-white rounded-full border border-green-500
-            absolute left-44 top-[67px] z-10 
-            "
-        >
-          <Image source={ICONS.iconLogin} className="mx-auto mt-5" />
+  return <SafeAreaView style={{ flex: 1, backgroundColor: Colors.offwhite }}>
+    <AppHeader title="Nông nghiệp Việt" subtitle="Đồng hành cùng nhà nông" />
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, paddingBottom: 36 }}>
+        <View style={{ backgroundColor: Colors.forestgreen, padding: 24, borderRadius: 26, marginBottom: 20 }}>
+          <Ionicons name="sunny-outline" size={32} color={Colors.sunlightyellow} />
+          <Text style={{ color: "white", fontSize: 28, fontWeight: "800", marginTop: 14 }}>Một mùa vụ tốt bắt đầu từ hôm nay.</Text>
+          <Text style={{ color: "#C8DDCF", fontSize: 14, lineHeight: 22, marginTop: 10 }}>Theo dõi công việc, thời tiết và nông sản ở cùng một nơi.</Text>
         </View>
-        <View className="opacity-50">
-          <Image
-            source={require("../../assets/images/image-login.png")}
-            style={{ width: "100%", resizeMode: "cover" }}
-          />
-        </View>
-        <View className="w-full h-[52px] absolute top-[170px] z-10">
-          <Text className="text-[#0F172A] text-[30px] font-bold text-center">
-            Nông nghiệp Việt
-          </Text>
-          <Text className="text-[#64748B] text-[16px] text-center">
-            Đồng hành cùng nhà nông
-          </Text>
-        </View>
-      </View>
-      <View className="flex-1 mt-2">
-        <View className="w-full py-[15px] px-[32px]">
-          <Text className="text-black font-bold text-[20px]">
-            Đăng nhập tài khoản
-          </Text>
+        <View style={{ backgroundColor: Colors.surface, borderRadius: 26, padding: 22 }}>
+          <Text style={{ color: Colors.textPrimary, fontSize: 23, fontWeight: "800" }}>Chào mừng trở lại</Text>
+          <Text style={{ color: Colors.textSecondary, lineHeight: 21, marginTop: 7 }}>Đăng nhập để tiếp tục chăm sóc vườn.</Text>
           <FormLogin />
-          <Text className="text-center text-black my-5">
-            Chưa có tài khoản?
-          </Text>
-          <Button
-            onPress={() => router.navigate("/register")}
-            size="lg"
-            className="w-full h-[56px] mx-auto bg-white border-[1px] border-[#4CAF50] rounded-[12px]"
-          >
-            <ButtonText className="text-[#4CAF50] uppercase font-bold">
-              Đăng ký tài khoản mới
-            </ButtonText>
-          </Button>
         </View>
-        <Text className="text-center">Phát triển bởi nông nghiệp Việt</Text>
-      </View>
-    </SafeAreaView>
-  );
+        <TouchableOpacity onPress={() => router.navigate("/register")} style={{ padding: 20, alignItems: "center" }}><Text style={{ color: Colors.leafgreen, fontWeight: "700" }}>Chưa có tài khoản? Đăng ký ngay</Text></TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  </SafeAreaView>;
 }

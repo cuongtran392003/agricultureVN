@@ -4,6 +4,7 @@ import { getAllTasks, TaskParams } from "@/services/tasks/getAllTask.service";
 import { getTaskById } from "@/services/tasks/getTaskById.service";
 import { updateTask } from "@/services/tasks/updateTask.service";
 import { CreateTaskDto } from "@/types/tasks";
+import { translate } from "@/i18n";
 import {
   keepPreviousData,
   useMutation,
@@ -45,7 +46,7 @@ export const useCreateTask = () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: () => {
-      Alert.alert("Thất bại", "Thêm công việc thất bại");
+      Alert.alert(translate("Thất bại"), translate("Thêm công việc thất bại"));
     },
   });
 };
@@ -62,7 +63,7 @@ export const useUpdateTask = () => {
       queryClient.invalidateQueries({ queryKey: ["task", variables.id] });
     },
     onError: () => {
-      Alert.alert("Thất bại", "Cập nhật công việc thất bại");
+      Alert.alert(translate("Thất bại"), translate("Cập nhật công việc thất bại"));
     },
   });
 };
@@ -78,7 +79,7 @@ export const useDeleteTask = () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: () => {
-      Alert.alert("Thất bại", "Xóa công việc thất bại");
+      Alert.alert(translate("Thất bại"), translate("Xóa công việc thất bại"));
     },
   });
 };

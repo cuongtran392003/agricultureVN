@@ -1,75 +1,14 @@
 import { Colors } from "@/constant/Colors";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "@/i18n";
+import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { TextInput, TouchableOpacity, View } from "react-native";
-
-interface ChatInputProps {
-  onSend: (text: string) => void;
-}
-
-export const ChatInput = ({ onSend }: ChatInputProps) => {
+export const ChatInput = ({ onSend }: { onSend: (text: string) => void }) => {
+  const { t } = useTranslation();
   const [text, setText] = useState("");
-
-  const handleSend = () => {
-    if (text.trim()) {
-      onSend(text.trim());
-      setText("");
-    }
-  };
-
-  return (
-    <View
-      className="flex-row items-center px-[12px] py-[10px] gap-2"
-      style={{
-        backgroundColor: Colors.offwhite,
-        borderTopWidth: 1,
-        borderTopColor: Colors.lightgray,
-      }}
-    >
-      {/* Mic button */}
-      <TouchableOpacity
-        className="w-[40px] h-[40px] rounded-full items-center justify-center"
-        style={{ backgroundColor: "#E8F5E9" }}
-      >
-        <Ionicons name="mic-outline" size={22} color={Colors.forestgreen} />
-      </TouchableOpacity>
-
-      {/* Text input */}
-      <View
-        className="flex-1 flex-row items-center rounded-full px-[14px]"
-        style={{
-          backgroundColor: "#F5F3F0",
-          height: 44,
-        }}
-      >
-        <TextInput
-          className="flex-1 text-[14px]"
-          placeholder="Nhập câu hỏi của bạn..."
-          placeholderTextColor={Colors.softsoil}
-          value={text}
-          onChangeText={setText}
-          onSubmitEditing={handleSend}
-          returnKeyType="send"
-          style={{ color: Colors.mediumtaupe }}
-        />
-      </View>
-
-      {/* Send button */}
-      <TouchableOpacity
-        onPress={handleSend}
-        className="w-[40px] h-[40px] rounded-full items-center justify-center"
-        style={{
-          backgroundColor: text.trim()
-            ? Colors.brandorange
-            : Colors.lightgray,
-        }}
-      >
-        <FontAwesome
-          name="send"
-          size={16}
-          color={text.trim() ? Colors.offwhite : Colors.softsoil}
-        />
-      </TouchableOpacity>
-    </View>
-  );
+  const send = () => { if (!text.trim()) return; onSend(text.trim()); setText(""); };
+  return <View style={{ flexDirection: "row", alignItems: "flex-end", gap: 12, paddingHorizontal: 20, paddingVertical: 14, backgroundColor: Colors.surface, borderTopWidth: 1, borderTopColor: Colors.border }}>
+    <TextInput accessibilityLabel={t("Câu hỏi cho trợ lý")} value={text} onChangeText={setText} multiline placeholder={t("Bạn muốn hỏi điều gì về mùa vụ?")} placeholderTextColor={Colors.textSecondary} style={{ flex: 1, minHeight: 52, maxHeight: 140, paddingHorizontal: 16, paddingVertical: 15, fontSize: 15, color: Colors.textPrimary, backgroundColor: Colors.offwhite, borderWidth: 1, borderColor: Colors.border, borderRadius: 18 }} />
+    <TouchableOpacity accessibilityLabel={t("Gửi câu hỏi")} accessibilityRole="button" disabled={!text.trim()} onPress={send} style={{ width: 52, height: 52, borderRadius: 18, alignItems: "center", justifyContent: "center", backgroundColor: text.trim() ? Colors.forestgreen : Colors.lightgray }}><Ionicons name="arrow-up" size={25} color={text.trim() ? "white" : Colors.textSecondary} /></TouchableOpacity>
+  </View>;
 };

@@ -1,5 +1,6 @@
 import { RegisterScreen } from "@/screens/register/RegisterScreen";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 
 export default function Register() {

@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Colors } from "@/constant/Colors";
 import { HourlyData } from "@/hooks/useWeatherForecast";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, TouchableOpacity, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 interface HourlyForecastProps {
   data: HourlyData[];

@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { router } from "expo-router";
+import { useAuthStore } from "@/stores/authStore";
 
 // const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL_PRODUCTION;
 const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
@@ -29,7 +30,7 @@ const refreshToken = async (): Promise<string | null> => {
       AsyncStorage.setItem("refreshToken", newRefreshToken),
     ]);
     return newAccessToken;
-  } catch (error) {
+  } catch {
     await Promise.all([
       AsyncStorage.removeItem("accessToken"),
       AsyncStorage.removeItem("refreshToken"),
@@ -41,7 +42,6 @@ const refreshToken = async (): Promise<string | null> => {
 axiosInstance.interceptors.request.use(
   async (config) => {
     const token = await AsyncStorage.getItem("accessToken");
-    console.log(">> check token", token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -60,7 +60,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     // Nếu 401 (Unauthorized) và chưa retry → thử refresh token
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
       originalRequest._retry = true;
 
       const newAccessToken = await refreshToken();
@@ -70,6 +70,7 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } else {
         // Nếu không lấy được token mới -> Hết phiên đăng nhập -> Đá về Login
+        await useAuthStore.getState().logout();
         router.replace("/login" as any);
       }
     }

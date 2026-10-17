@@ -21,6 +21,11 @@ export interface DailyData {
   low: string;
 }
 
+export interface RainForecast {
+  label: string;
+  mm: number;
+}
+
 export const useWeatherForecast = () => {
   const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null);
 
@@ -93,5 +98,15 @@ export const useWeatherForecast = () => {
     });
   })();
 
-  return { hourlyData, dailyData, isLoading, refetch, isRefetching };
+  const rainByDate = new Map<string, number>();
+  data?.list?.forEach((item: any) => {
+    const date = dayjs.unix(item.dt).format("YYYY-MM-DD");
+    const rain = Number(item.rain?.["3h"] ?? 0);
+    rainByDate.set(date, (rainByDate.get(date) ?? 0) + (Number.isFinite(rain) ? Math.max(0, rain) : 0));
+  });
+  const rainForecast: RainForecast[] = Array.from(rainByDate.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, mm]) => ({ label: dayjs(date).format("DD/MM"), mm: Math.round(mm * 10) / 10 }));
+
+  return { hourlyData, dailyData, rainForecast, isLoading, refetch, isRefetching };
 };

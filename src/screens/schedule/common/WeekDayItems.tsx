@@ -1,5 +1,6 @@
 import { Colors } from "@/constant/Colors";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 type WeekDayItemsProps = {
   day: number;

@@ -51,7 +51,15 @@
           "locationWhenInUsePermission": "Allow app to access your location"
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Cho phép sử dụng micro để nhập công việc bằng giọng nói. Allow microphone access for voice task entry.",
+          "speechRecognitionPermission": "Cho phép chuyển giọng nói thành nội dung công việc. Allow speech recognition for task entry.",
+          "androidSpeechServicePackages": ["com.google.android.googlequicksearchbox"]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

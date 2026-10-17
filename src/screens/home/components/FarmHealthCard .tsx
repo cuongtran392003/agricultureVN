@@ -1,5 +1,6 @@
 import { Colors } from "@/constant/Colors";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 import { CropStatusItem } from "../common/CropStatusItem";
 import { ICONS } from "assets/icons";
 

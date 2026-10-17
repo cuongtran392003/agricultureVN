@@ -1,6 +1,7 @@
 import { Colors } from "@/constant/Colors";
 import HomeScreen from "@/screens/home/HomeScreen";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 

@@ -3,7 +3,7 @@ import { Image } from "@/components/ui/image";
 import { View } from "@/components/ui/view";
 import { Colors } from "@/constant/Colors";
 import { ICONS } from "assets/icons";
-import { Text } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 import { MiniChart } from "../common/MiniChart";
 
 type MarketPriceCardProps = {
@@ -29,7 +29,7 @@ export const MarketPriceCard = ({ name, price, change, history }: MarketPriceCar
     >
       <View className="w-full flex-row gap-2 items-center">
         <Image source={ICONS.iconCoffee} className="w-5 h-5" />
-        <Text
+        <Text localize={false}
           className="text-[14px] font-bold"
           style={{ color: Colors.brownearth }}
         >

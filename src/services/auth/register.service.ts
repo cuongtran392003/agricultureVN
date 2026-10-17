@@ -7,11 +7,6 @@ export type RegisterDto = {
 };
 
 export const registerService = async (data: RegisterDto) => {
-  try {
-    const res = await axiosInstance.post("/auth/register", data);
-    return res;
-  } catch (error: any) {    
-    console.log(">> check error", error.response.data.message);
-    throw error;
-  }
+  const res = await axiosInstance.post("/auth/register", data);
+  return res;
 };

@@ -1,75 +1,12 @@
-import { Card } from "@/components/ui/card";
 import { Colors } from "@/constant/Colors";
-import { FontAwesome } from "@expo/vector-icons";
-import { Text, TouchableOpacity, View } from "react-native";
-
-type Props = {
-  name?: string;
-  onPress: () => void;
-};
-export const ProfileInfo = ({ name, onPress }: Props) => {
-  return (
-    <View className="px-[24px]">
-      <Text
-        className="font-bold text-[16px] mb-3"
-        style={{ color: Colors.brownearth }}
-      >
-        THÔNG TIN CÁ NHÂN
-      </Text>
-      <Card className="rounded-[12px]">
-        {/* Họ và tên */}
-        <TouchableOpacity
-          className="flex-row items-center justify-between p-3"
-          onPress={onPress}
-        >
-          <View className="flex-row gap-3 items-center flex-1">
-            <View
-              className="w-[40px] h-[40px] items-center justify-center rounded-full"
-              style={{ backgroundColor: Colors.forestgreen }}
-            >
-              <FontAwesome name="user" size={20} color={Colors.offwhite} />
-            </View>
-            <View className="flex-1">
-              <Text className="font-bold text-[14px]">Họ và tên</Text>
-              <Text
-                className="text-[12px] mt-0.5"
-                style={{ color: Colors.softsoil }}
-              >
-                {name}
-              </Text>
-            </View>
-          </View>
-          <FontAwesome name="chevron-right" size={16} color={Colors.softsoil} />
-        </TouchableOpacity>
-
-        {/* Divider */}
-        <View
-          className="mx-3"
-          style={{ height: 1, backgroundColor: Colors.lightgray }}
-        />
-
-        {/* Loại cây trồng */}
-        <TouchableOpacity className="flex-row items-center justify-between p-3">
-          <View className="flex-row gap-3 items-center flex-1">
-            <View
-              className="w-[40px] h-[40px] items-center justify-center rounded-full"
-              style={{ backgroundColor: Colors.forestgreen }}
-            >
-              <FontAwesome name="leaf" size={20} color={Colors.offwhite} />
-            </View>
-            <View className="flex-1">
-              <Text className="font-bold text-[14px]">Loại cây trồng</Text>
-              <Text
-                className="text-[12px] mt-0.5"
-                style={{ color: Colors.softsoil }}
-              >
-                Lúa nước, Sầu riêng, Bưởi
-              </Text>
-            </View>
-          </View>
-          <FontAwesome name="chevron-right" size={16} color={Colors.softsoil} />
-        </TouchableOpacity>
-      </Card>
-    </View>
-  );
-};
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
+export const ProfileInfo = ({ name, onPress }: { name?: string; onPress: () => void }) => <View style={{ paddingHorizontal: 20, marginTop: 24 }}>
+  <Text style={{ color: Colors.textPrimary, fontWeight: "800", fontSize: 18, marginBottom: 12 }}>Thông tin cá nhân</Text>
+  <TouchableOpacity accessibilityRole="button" onPress={onPress} style={{ flexDirection: "row", alignItems: "center", gap: 14, padding: 20, backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.border, borderRadius: 24 }}>
+    <View style={{ width: 44, height: 44, borderRadius: 15, backgroundColor: Colors.surfaceMuted, alignItems: "center", justifyContent: "center" }}><Ionicons name="person-outline" size={22} color={Colors.leafgreen} /></View>
+    <View style={{ flex: 1 }}><Text style={{ fontSize: 16, fontWeight: "700", color: Colors.textPrimary }}>Hồ sơ của bạn</Text><Text localize={!name} style={{ color: Colors.textSecondary, fontSize: 12, marginTop: 5 }}>{name || "Xem và cập nhật thông tin"}</Text></View>
+    <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
+  </TouchableOpacity>
+</View>;

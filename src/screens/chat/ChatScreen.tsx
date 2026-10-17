@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
-import { FlatList, KeyboardAvoidingView, Platform, View } from "react-native";
+import { Colors } from "@/constant/Colors";
+import { FlatList, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ChatBubble, ChatMessage } from "./components/ChatBubble";
 import { ChatHeader } from "./components/ChatHeader";
@@ -73,15 +74,16 @@ export const ChatScreen = () => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#F8F6F3" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.offwhite }}>
       <ChatHeader />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={0}
       >
         {/* Messages */}
         <FlatList
+          keyboardShouldPersistTaps="handled"
           ref={flatListRef}
           data={messages}
           keyExtractor={(item) => item.id}

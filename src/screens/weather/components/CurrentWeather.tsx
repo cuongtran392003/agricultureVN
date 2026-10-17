@@ -1,66 +1,16 @@
 import { Colors } from "@/constant/Colors";
-import { Ionicons } from "@expo/vector-icons";
-import { Image, Text, View } from "react-native";
-
-export const CurrentWeather = ({data, temp, description}: {data: any, temp: string, description: string}) => {
-  return (
-    <View className="px-[24px] pt-6 pb-4">
-      {/* Temperature row */}
-      <View className="flex-row items-start justify-between">
-        <View>
-          <Text
-            className="text-[52px] font-bold"
-            style={{ color: Colors.mediumtaupe, lineHeight: 58 }}
-          >
-            {temp} °C
-          </Text>
-          <Text
-            className="text-[14px] font-medium mt-1"
-            style={{ color: Colors.softsoil }}
-          >
-            {description}
-          </Text>
-        </View>
-        <Image
-          source={{
-            uri: `https://openweathermap.org/img/wn/${data?.weather[0]?.icon}@4x.png`,
-          }}
-          style={{ width: 90, height: 90, marginTop: -8 }}
-        />
-      </View>
-
-      {/* Stats row */}
-      <View
-        className="flex-row items-center justify-between mt-5 pt-4"
-        style={{ borderTopWidth: 1, borderTopColor: "#EDE6DE" }}
-      >
-        <StatItem icon="water-outline" value={data?.main?.humidity + "%"} label="ĐỘ ẨM" />
-        <StatItem icon="speedometer-outline" value={data?.wind?.speed + " km/h"} label="GIÓ" />
-        <StatItem icon="eye-outline" value={data?.visibility + " km"} label="TẦM NHÌN" />
-      </View>
+import { Image, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
+export const CurrentWeather = ({ data, temp, description }: { data: any; temp?: number | string; description?: string }) => {
+  const value = Number(temp);
+  const hasTemp = temp != null && Number.isFinite(value);
+  const stats = [{ label: "Độ ẩm không khí", value: data?.main?.humidity != null ? `${data.main.humidity}%` : "—" }, { label: "Gió", value: data?.wind?.speed != null ? `${(data.wind.speed * 3.6).toFixed(1)} km/h` : "—" }, { label: "Tầm nhìn", value: data?.visibility != null ? `${(data.visibility / 1000).toFixed(1)} km` : "—" }];
+  return <View style={{ margin: 20, padding: 24, backgroundColor: Colors.forestgreen, borderRadius: 28 }}>
+    <Text style={{ color: "#C8DDCF", fontSize: 12, fontWeight: "700", letterSpacing: 1.3 }}>THỜI TIẾT HIỆN TẠI</Text>
+    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
+      <View style={{ flex: 1 }}><Text style={{ color: "white", fontSize: 52, fontWeight: "800" }}>{hasTemp ? Math.round(value) : "—"}°</Text><Text style={{ color: "#C8DDCF", fontSize: 15, marginTop: 4 }}>{description || "Chưa có dữ liệu thời tiết"}</Text></View>
+      {data?.weather?.[0]?.icon ? <Image source={{ uri: `https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png` }} style={{ width: 88, height: 88 }} /> : null}
     </View>
-  );
+    <View style={{ flexDirection: "row", gap: 8, borderTopWidth: 1, borderTopColor: "#386650", paddingTop: 18, marginTop: 20 }}>{stats.map(item => <View key={item.label} style={{ flex: 1 }}><Text style={{ color: "white", fontSize: 14, fontWeight: "800" }}>{item.value}</Text><Text style={{ color: "#C8DDCF", fontSize: 10, marginTop: 6 }}>{item.label}</Text></View>)}</View>
+  </View>;
 };
-
-const StatItem = ({
-  icon,
-  value,
-  label,
-}: {
-  icon: string;
-  value: string;
-  label: string;
-}) => (
-  <View className="items-center gap-1">
-    <Ionicons name={icon as any} size={20} color={Colors.brandorange} />
-    <Text
-      className="font-bold text-[15px]"
-      style={{ color: Colors.mediumtaupe }}
-    >
-      {value}
-    </Text>
-    <Text className="text-[10px] tracking-[1px]" style={{ color: Colors.softsoil }}>
-      {label}
-    </Text>
-  </View>
-);

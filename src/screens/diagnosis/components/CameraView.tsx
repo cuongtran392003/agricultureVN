@@ -1,6 +1,7 @@
 import { Colors } from "@/constant/Colors";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 export const CameraView = () => {
   return (
@@ -20,9 +21,9 @@ export const CameraView = () => {
 
       {/* Camera preview area */}
       <View
-        className="w-full rounded-[16px] items-center justify-center overflow-hidden"
+        className="w-full rounded-[28px] items-center justify-center overflow-hidden"
         style={{
-          aspectRatio: 4 / 3,
+          aspectRatio: 1,
           backgroundColor: "#1a1a1a",
           borderWidth: 3,
           borderColor: Colors.forestgreen,
@@ -47,7 +48,7 @@ export const CameraView = () => {
       </View>
 
       {/* Action buttons */}
-      <View className="flex-row items-center justify-center gap-10 mt-5 mb-2">
+      <View className="w-full flex-row items-center justify-around mt-5 mb-2 bg-white rounded-[24px] py-4">
         {/* Gallery button */}
         <TouchableOpacity className="items-center gap-1">
           <View

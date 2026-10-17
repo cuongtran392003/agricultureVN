@@ -1,138 +1,93 @@
 import { Colors } from "@/constant/Colors";
-import { formatTime } from "@/utils/formatTimeDate";
-import { FontAwesome } from "@expo/vector-icons";
-import { ICONS } from "assets/icons";
-import * as Haptics from "expo-haptics";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { translate } from "@/i18n";
+import { Task } from "@/types/tasks";
+import { formatTaskTime } from "@/utils/formatTimeDate";
+import { Ionicons } from "@expo/vector-icons";
+import { ActivityIndicator, Alert, StyleSheet, TouchableOpacity, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
-type TaskTodayScheduleProps = {
-  title: string;
-  subtitle: string;
-  time: string;
-  location: string;
-  status: string;
+type Props = {
+  task: Task;
+  last: boolean;
+  busy: boolean;
+  onPress: () => void;
   onMarkDone: () => void;
-  onEdit: () => void;
   onDelete: () => void;
-  onPress:() =>void;
 };
 
-export const TaskTodaySchedule = ({
-  title,
-  subtitle,
-  time,
-  location,
-  status,
-  onMarkDone,
-  onEdit,
-  onDelete,
-  onPress
-}: TaskTodayScheduleProps) => {
+export const TaskTodaySchedule = ({ task, last, busy, onPress, onMarkDone, onDelete }: Props) => {
+  const done = task.status === "completed";
+  const cancelled = task.status === "cancelled";
+  const color = done ? Colors.leafgreen : cancelled ? Colors.textSecondary : Colors.brandorange;
+  const status = done ? "Hoàn thành" : cancelled ? "Đã hủy" : "Chờ thực hiện";
+  const openMenu = () => Alert.alert(task.title, translate("Thao tác với công việc"), [
+    { text: translate("Xem chi tiết"), onPress },
+    { text: translate("Xóa công việc"), style: "destructive", onPress: onDelete },
+    { text: translate("Đóng"), style: "cancel" },
+  ]);
   return (
-    <TouchableOpacity
-    onPress={onPress}
-      className="w-full mt-4 bg-white"
-      style={{
-        borderLeftWidth: 6,
-        ...(status === "pending"
-          ? {
-              borderLeftColor: Colors.brandorange,
-            }
-          : {
-              borderLeftColor: Colors.forestgreen,
-            }),
-        borderRadius: 20,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.05,
-        shadowRadius: 10,
-        elevation: 3,
-        borderTopWidth: 1,
-        borderRightWidth: 1,
-        borderBottomWidth: 1,
-        borderColor: "rgba(0,0,0,0.03)",
-        overflow: "hidden",
-      }}
-    >
-      <View className=" flex-row gap-2 items-center p-[16px]">
-        <View className="flex-1 ml-3 gap-2">
-          <Text className="font-bold text-[18px]" numberOfLines={1}>
-            {title}
-          </Text>
-          <Text className="text-[12px]" style={{ color: Colors.brownearth }}>
-            {subtitle}
-          </Text>
-          <View className="flex-row items-center gap-5">
-            <Text className="text-[12px]" style={{ color: Colors.brownearth }}>
-              {formatTime(new Date(time))}
-            </Text>
-            <Text className="text-[12px]" style={{ color: Colors.brownearth }}>
-              {location}
-            </Text>
-          </View>
-        </View>
-        {status === "pending" ? (
-          <View className="bg-[#FEF3C7] p-[8px] rounded-[12px]">
-            <Text style={{ color: Colors.brandorange }}>Chờ thực hiện</Text>
-          </View>
-        ) : (
-          <View className="bg-[#E1EDE6] rounded-full p-[8px]">
-            <Image source={ICONS.iconTickWhite} />
-          </View>
-        )}
+    <View style={styles.row}>
+      <View style={styles.rail}>
+        <Text style={styles.time}>{formatTaskTime(task.scheduledTime)}</Text>
+        <View style={[styles.node, { borderColor: color }]}><View style={[styles.nodeInner, { backgroundColor: color }]} /></View>
+        {!last && <View style={styles.line} />}
       </View>
-      <View className="bg-[#F9FAFB] p-[16px] flex-row items-center justify-between rounded-[12px]">
-        {status === "pending" ? (
-          <TouchableOpacity
-            className="px-[16px] py-[8px] rounded-[12px] w[50%]"
-            style={{ backgroundColor: Colors.leafgreen }}
-            onPress={() => {
-              Haptics.notificationAsync(
-                Haptics.NotificationFeedbackType.Success,
-              );
-              onMarkDone();
-            }}
-          >
-            <Text className="font-bold text-white">Đánh dấu xong</Text>
+      <View style={[styles.card, cancelled && { opacity: 0.7 }]}>
+        <View style={styles.top}>
+          <View style={[styles.badge, { backgroundColor: done ? Colors.surfaceMuted : cancelled ? Colors.offwhite : "#FFF3E4" }]}>
+            <View style={[styles.statusDot, { backgroundColor: color }]} />
+            <Text style={[styles.status, { color }]}>{status}</Text>
+          </View>
+          <TouchableOpacity onPress={openMenu} disabled={busy} accessibilityRole="button" accessibilityLabel={`Thao tác với ${task.title}`} style={styles.menu}>
+            <Ionicons name="ellipsis-horizontal" size={20} color={Colors.textSecondary} />
           </TouchableOpacity>
-        ) : null}
-        {status === "pending" ? (
-          <View className="flex-row items-center justify-around gap-2 w-[50%]">
-            <TouchableOpacity
-              className="flex-row items-center gap-2 rounded-lg p-2"
-              style={{ borderColor: Colors.brandorange, borderWidth: 2 }}
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                onEdit();
-              }}
-            >
-              <FontAwesome name="edit" size={24} color={Colors.brownearth} />
-              <Text
-                className="text-[14px] font-bold"
-                style={{ color: Colors.brandorange }}
-              >
-                Sửa
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="flex-row items-center gap-2 rounded-lg p-2"
-              style={{ borderColor: Colors.brownearth, borderWidth: 2 }}
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                onDelete();
-              }}
-            >
-              <FontAwesome name="trash" size={24} color={Colors.brownearth} />
-              <Text
-                className="text-[14px] font-bold"
-                style={{ color: Colors.brownearth }}
-              >
-                Xóa
-              </Text>
-            </TouchableOpacity>
+        </View>
+        <TouchableOpacity onPress={onPress} accessibilityRole="button" style={styles.content}>
+          <Text localize={false} style={[styles.title, cancelled && { textDecorationLine: "line-through" }]}>{task.title}</Text>
+          <View style={styles.location}>
+            <Ionicons name="location-outline" size={14} color={Colors.textSecondary} />
+            <Text localize={!task.farmId?.name && !task.plotId?.name} style={styles.meta}>{[task.farmId?.name, task.plotId?.name].filter(Boolean).join(" · ") || "Chưa có thông tin khu vực"}</Text>
           </View>
-        ) : null}
+          {task.cropName ? <Text style={styles.crop}>Cây trồng: <Text localize={false}>{task.cropName}</Text></Text> : null}
+        </TouchableOpacity>
+        <View style={styles.bottom}>
+          <View style={styles.priority}>
+            <Ionicons name="flag-outline" size={13} color={task.priority === "high" ? Colors.error : Colors.textSecondary} />
+            <Text style={[styles.priorityText, task.priority === "high" && { color: Colors.error }]}>{task.priority === "high" ? "Ưu tiên cao" : task.priority === "low" ? "Ưu tiên thấp" : "Ưu tiên vừa"}</Text>
+          </View>
+          {task.status === "pending" ? (
+            <TouchableOpacity disabled={busy} onPress={onMarkDone} accessibilityRole="button" accessibilityLabel={`Hoàn thành ${task.title}`} style={[styles.complete, busy && { opacity: 0.6 }]}>
+              {busy ? <ActivityIndicator size="small" color={Colors.forestgreen} /> : <Ionicons name="checkmark" size={16} color={Colors.forestgreen} />}
+              <Text style={styles.completeText}>Xong</Text>
+            </TouchableOpacity>
+          ) : <Ionicons name={done ? "checkmark-circle" : "close-circle-outline"} size={23} color={color} />}
+        </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  row: { flexDirection: "row", gap: 12 },
+  rail: { width: 46, alignItems: "center", paddingTop: 19 },
+  time: { fontSize: 12, fontWeight: "800", color: Colors.textPrimary },
+  node: { width: 14, height: 14, borderRadius: 7, borderWidth: 1.5, alignItems: "center", justifyContent: "center", marginTop: 11, backgroundColor: Colors.offwhite, zIndex: 1 },
+  nodeInner: { width: 5, height: 5, borderRadius: 3 },
+  line: { width: 1.5, flex: 1, backgroundColor: Colors.border },
+  card: { flex: 1, minWidth: 0, backgroundColor: "white", borderRadius: 22, borderWidth: 1, borderColor: Colors.border, marginBottom: 14, padding: 15 },
+  top: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 5 },
+  badge: { flexDirection: "row", alignItems: "center", gap: 5, paddingHorizontal: 9, paddingVertical: 6, borderRadius: 8 },
+  statusDot: { width: 5, height: 5, borderRadius: 3 },
+  status: { fontSize: 10, fontWeight: "700" },
+  menu: { width: 36, height: 36, alignItems: "center", justifyContent: "center" },
+  content: { paddingVertical: 8 },
+  title: { fontSize: 17, lineHeight: 24, fontWeight: "800", color: Colors.textPrimary },
+  location: { flexDirection: "row", gap: 5, alignItems: "flex-start", marginTop: 8 },
+  meta: { flex: 1, fontSize: 12, lineHeight: 18, color: Colors.textSecondary },
+  crop: { fontSize: 11, lineHeight: 17, color: Colors.textSecondary, marginTop: 4 },
+  bottom: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8, paddingTop: 10, marginTop: 4, borderTopWidth: 1, borderTopColor: Colors.surfaceMuted },
+  priority: { flex: 1, flexDirection: "row", alignItems: "center", gap: 5 },
+  priorityText: { fontSize: 10, fontWeight: "600", color: Colors.textSecondary },
+  complete: { flexDirection: "row", alignItems: "center", gap: 5, backgroundColor: Colors.surfaceMuted, borderRadius: 10, paddingHorizontal: 11, minHeight: 38 },
+  completeText: { fontSize: 12, fontWeight: "700", color: Colors.forestgreen },
+});

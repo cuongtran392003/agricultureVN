@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Colors } from "@/constant/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 export const FarmAdvice = () => {
   return (

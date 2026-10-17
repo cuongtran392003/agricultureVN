@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Colors } from "@/constant/Colors";
 import { FontAwesome } from "@expo/vector-icons";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 interface HistoryItem {
   id: string;

@@ -58,8 +58,5 @@ export const useDeleteFarm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["farm"] });
     },
-    onError: (error) => {
-      console.log(">>> check error", error);
-    },
   });
 };

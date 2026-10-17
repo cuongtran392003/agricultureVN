@@ -1,6 +1,7 @@
 import { GlobalBackground } from "@/components/GlobalBackground";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import {
+  getFirebaseMessaging,
   onMessageReceived,
   requestUserPermission,
 } from "@/services/notification.service";
@@ -11,7 +12,6 @@ import {
   Nunito_800ExtraBold,
   useFonts,
 } from "@expo-google-fonts/nunito";
-import messaging from "@react-native-firebase/messaging";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -55,14 +55,16 @@ export default function RootLayout() {
   const router = useRouter();
 
   useEffect(() => {
-    requestUserPermission();
+    void requestUserPermission().catch((notificationError) => {
+      console.warn("Notification permission setup failed.", notificationError);
+    });
+    const messaging = getFirebaseMessaging();
 
     // 1. Khi đang mở App
-    const unsubscribe = messaging().onMessage(onMessageReceived);
+    const unsubscribe = messaging?.onMessage(onMessageReceived) ?? (() => {});
 
     // 2. Khi nhấn vào thông báo từ trạng thái Background (App đang ẩn)
-    const unsubscribeOpened = messaging().onNotificationOpenedApp(
-      (remoteMessage) => {
+    const unsubscribeOpened = messaging?.onNotificationOpenedApp((remoteMessage: any) => {
         console.log(
           "Notification caused app to open from background:",
           remoteMessage.data,
@@ -70,13 +72,11 @@ export default function RootLayout() {
         if (remoteMessage.data?.screen) {
           router.push(remoteMessage.data.screen as any);
         }
-      },
-    );
+      }) ?? (() => {});
 
     // 3. Khi nhấn vào thông báo từ trạng thái Quit (App tắt hẳn)
-    messaging()
-      .getInitialNotification()
-      .then((remoteMessage) => {
+    messaging?.getInitialNotification()
+      .then((remoteMessage: import("@react-native-firebase/messaging").FirebaseMessagingTypes.RemoteMessage | null) => {
         if (remoteMessage) {
           console.log(
             "Notification caused app to open from quit state:",
@@ -98,36 +98,34 @@ export default function RootLayout() {
     };
   }, []);
 
-  if (!loaded && !error) {
-    return null;
-  }
-
   return (
     <QueryClientProvider client={queryClient}>
-      <GluestackUIProvider>
-        <SafeAreaProvider>
-          <GlobalBackground />
-          <StatusBar
-            style="dark"
-            backgroundColor="transparent"
-            translucent={true}
-          />
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              animation: "slide_from_right",
-              contentStyle: { backgroundColor: "transparent" },
-            }}
-          >
-            <Stack.Screen name="index" />
-            <Stack.Screen name="login" />
-            <Stack.Screen name="chat" />
-            <Stack.Screen name="weather" />
-            <Stack.Screen name="register" />
-            <Stack.Screen name="(tabs)" />
-          </Stack>
-        </SafeAreaProvider>
-      </GluestackUIProvider>
+      {loaded || error ? (
+        <GluestackUIProvider>
+          <SafeAreaProvider>
+            <GlobalBackground />
+            <StatusBar
+              style="dark"
+              backgroundColor="transparent"
+              translucent={true}
+            />
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                animation: "slide_from_right",
+                contentStyle: { backgroundColor: "transparent" },
+              }}
+            >
+              <Stack.Screen name="index" />
+              <Stack.Screen name="login" />
+              <Stack.Screen name="chat" />
+              <Stack.Screen name="weather" />
+              <Stack.Screen name="register" />
+              <Stack.Screen name="(tabs)" />
+            </Stack>
+          </SafeAreaProvider>
+        </GluestackUIProvider>
+      ) : null}
     </QueryClientProvider>
   );
 }

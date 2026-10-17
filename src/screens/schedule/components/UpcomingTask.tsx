@@ -1,7 +1,7 @@
-import { Card } from "@/components/ui/card";
 import { Colors } from "@/constant/Colors";
 import { formatTime } from "@/utils/formatTimeDate";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 type UpcomingTaskProps = {
     title: string;
@@ -26,10 +26,10 @@ export const UpcomingTask = ({ title, subTitle, time, onPress }: UpcomingTaskPro
           style={{ backgroundColor: Colors.brandorange, opacity: 0.7 }}
         ></View>
         <View className="flex-1">
-          <Text className="font-bold text-[15px] mb-1 text-gray-800" numberOfLines={1}>
+          <Text localize={false} className="font-bold text-[15px] mb-1 text-gray-800" numberOfLines={1}>
             {title}
           </Text>
-          <Text className="text-[13px]" style={{ color: Colors.brownearth }}>
+          <Text localize={false} className="text-[13px]" style={{ color: Colors.brownearth }}>
             {subTitle}
           </Text>
         </View>

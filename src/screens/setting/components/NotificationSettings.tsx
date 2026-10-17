@@ -3,26 +3,27 @@ import { Switch } from "@/components/ui/switch";
 import { Colors } from "@/constant/Colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 export const NotificationSettings = () => {
   const [priceAlert, setPriceAlert] = useState(true);
   const [weatherAlert, setWeatherAlert] = useState(true);
 
   return (
-    <View className="px-[24px] mt-5">
+    <View className="px-[20px] mt-5">
       <Text
         className="font-bold text-[16px] mb-3"
         style={{ color: Colors.brownearth }}
       >
         THÔNG BÁO & CẢNH BÁO
       </Text>
-      <Card className="rounded-[12px]">
+      <Card className="rounded-[24px]">
         {/* Giá nông sản */}
-        <View className="flex-row items-center justify-between p-3">
+        <View className="flex-row items-center justify-between p-4">
           <View className="flex-row gap-3 items-center flex-1">
             <View
-              className="w-[40px] h-[40px] items-center justify-center rounded-full"
+              className="w-[40px] h-[40px] items-center justify-center rounded-[14px]"
               style={{ backgroundColor: Colors.leafgreen }}
             >
               <FontAwesome
@@ -59,10 +60,10 @@ export const NotificationSettings = () => {
         />
 
         {/* Cảnh báo thời tiết */}
-        <View className="flex-row items-center justify-between p-3">
+        <View className="flex-row items-center justify-between p-4">
           <View className="flex-row gap-3 items-center flex-1">
             <View
-              className="w-[40px] h-[40px] items-center justify-center rounded-full"
+              className="w-[40px] h-[40px] items-center justify-center rounded-[14px]"
               style={{ backgroundColor: Colors.leafgreen }}
             >
               <FontAwesome name="cloud" size={18} color={Colors.offwhite} />

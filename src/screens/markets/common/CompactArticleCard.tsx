@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Colors } from "@/constant/Colors";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 type CompactArticleCardProps = {
   title: string;

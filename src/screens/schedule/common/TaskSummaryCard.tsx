@@ -1,7 +1,8 @@
 import { ICONS } from "assets/icons";
 import { Colors } from "@/constant/Colors";
 import { TaskSummaryCardProps } from "@/types/schedule";
-import { Image, View,Text } from "react-native";
+import { Image, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 
 

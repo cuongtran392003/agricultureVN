@@ -1,0 +1,4 @@
+import { Colors } from "@/constant/Colors";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
+export const PrimaryButton = ({ title, onPress, loading = false }: { title: string; onPress: () => void; loading?: boolean }) => <TouchableOpacity accessibilityRole="button" accessibilityState={{ disabled: loading, busy: loading }} disabled={loading} activeOpacity={0.85} onPress={onPress} style={{ minHeight: 56, borderRadius: 18, backgroundColor: Colors.forestgreen, alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 10, padding: 16, opacity: loading ? 0.7 : 1 }}>{loading ? <ActivityIndicator color="white" /> : null}<Text style={{ fontSize: 16, fontWeight: "800", color: "white" }}>{loading ? "Đang xử lý…" : title}</Text></TouchableOpacity>;

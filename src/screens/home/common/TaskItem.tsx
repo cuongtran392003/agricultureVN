@@ -1,9 +1,8 @@
 import { Colors } from "@/constant/Colors";
 import { TaskItemProps } from "@/types/home";
 import { FontAwesome } from "@expo/vector-icons";
-import { Text, View } from "react-native";
-
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 export const TaskItem = ({
   nameWork,
@@ -15,14 +14,17 @@ export const TaskItem = ({
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      className="flex-row gap-5 items-center p-[16px] bg-white rounded-[16px] mt-4 mb-2"
+      className="flex-row gap-4 items-center p-[16px] rounded-[20px] mt-4 mb-2"
       style={{
-        borderLeftWidth: 5,
-        borderLeftColor: Colors.brownearth,
-        shadowColor: "#000",
+        borderLeftWidth: 4,
+        borderLeftColor: status === "completed" ? Colors.success : Colors.sunlightyellow,
+        backgroundColor: Colors.surface,
+        borderWidth: 1,
+        borderColor: Colors.border,
+        shadowColor: Colors.shadow,
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
+        shadowOpacity: 0.07,
+        shadowRadius: 9,
         elevation: 3,
       }}
       onPress={onPress}
@@ -30,9 +32,9 @@ export const TaskItem = ({
       <View
         className="w-[24px] h-[24px] rounded-[4px]"
         style={{
-          borderColor: Colors.brownearth,
+          borderColor: status === "completed" ? Colors.success : Colors.lightgray,
           borderWidth: 2,
-          backgroundColor: Colors.offwhite,
+          backgroundColor: status === "completed" ? Colors.surfaceMuted : Colors.offwhite,
         }}
       >
         {status === "completed" ? (
@@ -41,15 +43,17 @@ export const TaskItem = ({
           null
         )}
       </View>
-      <View className="">
-        <Text
+      <View style={{ flex: 1, minWidth: 0 }}>
+        <Text localize={false}
           className="font-semibold text-[16px]"
+          numberOfLines={2}
           style={{ color: Colors.brownearth }}
         >
           {nameWork}
         </Text>
-        <Text
-          className="text-[12px] mt-1 w-64"
+        <Text localize={false}
+          className="text-[12px] mt-1"
+          numberOfLines={2}
           style={{ color: Colors.brownearth }}
         >
           {note}

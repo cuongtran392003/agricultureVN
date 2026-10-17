@@ -1,6 +1,7 @@
 import { Colors } from "@/constant/Colors";
 import { IMAGES } from "assets/images";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 import { CompactArticleCard } from "../common/CompactArticleCard";
 import { FeaturedCard } from "../common/FeaturedCard";
 import { ExpertChatButton } from "../common/ExpertChatButton";

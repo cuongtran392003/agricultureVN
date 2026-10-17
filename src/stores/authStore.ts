@@ -46,8 +46,11 @@ export const useAuthStore = create<AuthState>((set) => ({
 
 
   logout: async () => {
-    await AsyncStorage.removeItem('accessToken');
-    await AsyncStorage.removeItem('refreshToken');
     set({ user: null, isLoggedIn: false });
+    await Promise.allSettled([
+      AsyncStorage.removeItem('accessToken'),
+      AsyncStorage.removeItem('refreshToken'),
+      AsyncStorage.removeItem('user'),
+    ]);
   },
 }));

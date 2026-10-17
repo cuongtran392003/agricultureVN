@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Colors } from "@/constant/Colors";
 import { IMAGES } from "assets/images";
-import { Image, Text, View } from "react-native";
+import { Image, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 export const FeaturedCard = () => {
   return (

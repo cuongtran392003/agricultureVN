@@ -1,3 +1,4 @@
+import { Colors } from "@/constant/Colors";
 import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import Svg, { Circle, Defs, LinearGradient, Path, Stop } from "react-native-svg";
@@ -11,23 +12,23 @@ export const GlobalBackground = () => {
       <View
         style={[
           StyleSheet.absoluteFillObject,
-          { backgroundColor: "#F4F9F4" }, // Soft off-white green
+          { backgroundColor: Colors.offwhite },
         ]}
       />
 
       <Svg width={width} height={height} style={StyleSheet.absoluteFillObject}>
         <Defs>
           <LinearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#81C784" stopOpacity="0.15" />
-            <Stop offset="100%" stopColor="#4CAF50" stopOpacity="0.05" />
+            <Stop offset="0%" stopColor="#A8D5B7" stopOpacity="0.32" />
+            <Stop offset="100%" stopColor="#3F8A65" stopOpacity="0.04" />
           </LinearGradient>
           <LinearGradient id="grad2" x1="100%" y1="0%" x2="0%" y2="100%">
-            <Stop offset="0%" stopColor="#DCE775" stopOpacity="0.1" />
-            <Stop offset="100%" stopColor="#AED581" stopOpacity="0.05" />
+            <Stop offset="0%" stopColor="#F7D788" stopOpacity="0.20" />
+            <Stop offset="100%" stopColor="#D5EACF" stopOpacity="0.04" />
           </LinearGradient>
           <LinearGradient id="grad3" x1="0%" y1="100%" x2="100%" y2="0%">
-            <Stop offset="0%" stopColor="#4DB6AC" stopOpacity="0.1" />
-            <Stop offset="100%" stopColor="#81C784" stopOpacity="0.05" />
+            <Stop offset="0%" stopColor="#70B58C" stopOpacity="0.18" />
+            <Stop offset="100%" stopColor="#BFE1C3" stopOpacity="0.04" />
           </LinearGradient>
         </Defs>
 

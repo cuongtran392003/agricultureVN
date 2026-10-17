@@ -1,24 +1,28 @@
 import { Colors } from "@/constant/Colors";
 import { FarmMetricCardProps } from "@/types/home";
-import { Image, Text, View } from "react-native";
+import { Image, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 export const FarmMetricCard = ({ name, value, icons }: FarmMetricCardProps) => {
   return (
     <View
-      className="bg-white rounded-[24px] items-center justify-center p-[20px]"
+      className="rounded-[22px] items-center justify-center p-[18px]"
       style={{
         flex: 1,
         marginHorizontal: 5,
-        shadowColor: "#000",
+        backgroundColor: Colors.surface,
+        borderWidth: 1,
+        borderColor: Colors.border,
+        shadowColor: Colors.shadow,
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-        elevation: 3,
+        shadowOpacity: 0.08,
+        shadowRadius: 10,
+        elevation: 4,
       }}
     >
       <View
         className="w-[40px] h-[40px] rounded-full items-center justify-center"
-        style={{ backgroundColor: Colors.leafgreen }}
+        style={{ backgroundColor: Colors.surfaceMuted }}
       >
         <Image source={icons} />
       </View>

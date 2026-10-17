@@ -1,55 +1,18 @@
 import { Colors } from "@/constant/Colors";
-import { FontAwesome } from "@expo/vector-icons";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
-type Props = {
-  id?: string;
-  name?: string;
-};
-export const ProfileHeader = ({ id, name }: Props) => {
-  return (
-    <View className="items-center justify-center gap-2 mt-4 mb-4">
-      {/* Avatar with camera icon */}
-      <View className="relative">
-        <View
-          className="w-[100px] h-[100px] rounded-full items-center justify-center mb-4 shadow-sm"
-          style={{ backgroundColor: Colors.leafgreen || "#22C55E" }}
-        >
-          <Text className="text-[40px] font-bold text-white uppercase">
-            {name?.charAt(0) || "U"}
-          </Text>
-        </View>
-        {/* Camera icon overlay */}
-        <View
-          className="absolute bottom-0 right-0 w-[32px] h-[32px] rounded-full items-center justify-center"
-          style={{
-            backgroundColor: Colors.offwhite,
-            borderWidth: 1.5,
-            borderColor: Colors.forestgreen,
-          }}
-        >
-          <FontAwesome name="camera" size={14} color={Colors.forestgreen} />
-        </View>
-      </View>
+type Props = { id?: string; name?: string };
 
-      {/* Name */}
-      <Text className="font-bold text-[20px] text-center">{name}</Text>
-
-      {/* Crop type subtitle */}
-      <Text
-        className="font-semibold text-[13px] text-center"
-        style={{ color: Colors.leafgreen }}
-      >
-        🌾 Lúa ngọc & Cây ăn trái
-      </Text>
-
-      {/* User ID */}
-      <Text
-        className="font-semibold text-[12px] text-center"
-        style={{ color: Colors.softsoil }}
-      >
-        ID: {id}
-      </Text>
+export const ProfileHeader = ({ id, name }: Props) => (
+  <View style={{ flexDirection: "row", alignItems: "center", padding: 20, gap: 16 }}>
+    <View style={{ width: 70, height: 70, borderRadius: 24, backgroundColor: Colors.forestgreen, alignItems: "center", justifyContent: "center" }}>
+      <Text style={{ fontSize: 30, color: "white", fontWeight: "800" }}>{name?.trim().charAt(0).toUpperCase() || "U"}</Text>
     </View>
-  );
-};
+    <View style={{ flex: 1 }}>
+      <Text style={{ fontSize: 11, fontWeight: "700", letterSpacing: 1, color: Colors.leafgreen }}>HỒ SƠ NHÀ NÔNG</Text>
+      <Text localize={!name} style={{ fontSize: 22, fontWeight: "800", color: Colors.textPrimary, marginTop: 5 }} numberOfLines={2}>{name || "Tài khoản của bạn"}</Text>
+      {id ? <Text style={{ fontSize: 11, color: Colors.textSecondary, marginTop: 6 }} numberOfLines={1}>ID: {id}</Text> : null}
+    </View>
+  </View>
+);

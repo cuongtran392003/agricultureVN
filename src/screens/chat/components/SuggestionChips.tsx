@@ -1,5 +1,6 @@
 import { Colors } from "@/constant/Colors";
-import { ScrollView, Text, TouchableOpacity } from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 interface SuggestionChipsProps {
   suggestions: string[];

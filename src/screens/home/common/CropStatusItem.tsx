@@ -1,7 +1,7 @@
-import { ICONS } from "@/assets/icons";
 import { Colors } from "@/constant/Colors";
 import { CropStatusItemProps } from "@/types/home";
-import { Image, Text, View } from "react-native";
+import { Image, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 
 

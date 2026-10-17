@@ -1,3 +1,4 @@
+import { FormField } from "@/components/common/FormField";
 import { ManageModal } from "@/components/common/ManageModal";
 import { Colors } from "@/constant/Colors";
 import {
@@ -10,7 +11,8 @@ import { useAuthStore } from "@/stores/authStore";
 import { Feather, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import React, { useEffect, useState } from "react";
-import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, TouchableOpacity, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 import { useFarm } from "@/hooks/api/farm/useFarm";
 import Animated, { FadeInUp } from "react-native-reanimated";
@@ -45,6 +47,8 @@ export const ManagePlotScreen = ({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [farmId, setFarmId] = useState("");
+  const [filterFarmId, setFilterFarmId] = useState("");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     if (plotResponse?.data) {
@@ -68,41 +72,32 @@ export const ManagePlotScreen = ({
     setIsModalVisible(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!name.trim()) {
-      Alert.alert("Thiếu thông tin", "Cô/chú vui lòng nhập tên Lô đất nhé!");
+      Alert.alert("Thiếu thông tin", "Vui lòng nhập tên lô đất.");
       return;
     }
     if (!farmId) {
-      Alert.alert(
-        "Thiếu thông tin",
-        "Cô/chú vui lòng chọn Nông trại quản lý Lô đất này nhé!",
-      );
+      Alert.alert("Thiếu thông tin", "Vui lòng chọn nông trại quản lý lô đất.");
+      return;
+    }
+    if (!editingId && !user?._id) {
+      Alert.alert("Lỗi", "Vui lòng đăng nhập lại trước khi tạo lô đất.");
       return;
     }
 
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-
-    if (editingId) {
-      setPlots((prev) =>
-        prev.map((p) =>
-          p._id === editingId ? { ...p, name, description, farmId } : p,
-        ),
-      );
-      updatePlot({
-        id: editingId,
-        data: { name, description, farmId },
-      });
-    } else {
-      createPlot({
-        userId: user?._id || "",
-        name,
-        description,
-        farmId,
-      });
+    try {
+      const plotData = { name: name.trim(), description: description.trim(), farmId };
+      if (editingId) {
+        await updatePlot({ id: editingId, data: plotData });
+      } else {
+        await createPlot({ ...plotData, userId: user!._id });
+      }
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setIsModalVisible(false);
+    } catch {
+      Alert.alert("Lỗi", "Không thể lưu lô đất. Vui lòng thử lại.");
     }
-
-    setIsModalVisible(false);
   };
 
   const handleDelete = (id: string, plotName: string) => {
@@ -116,7 +111,6 @@ export const ManagePlotScreen = ({
           style: "destructive",
           onPress: () => {
             Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            setPlots((prev) => prev.filter((p) => p._id !== id));
             deletePlot(id);
           },
         },
@@ -151,7 +145,7 @@ export const ManagePlotScreen = ({
         contentContainerStyle={{ padding: 16 }}
         showsVerticalScrollIndicator={false}
       >
-        <View className="mb-4 ">
+        <View className="rounded-[24px] bg-white p-5 mb-5"><Text className="text-[22px] font-bold mb-4" style={{ color: Colors.textPrimary }}>Lô đất của bạn</Text><FormField label="Tìm lô đất" icon="search-outline" placeholder="Nhập tên lô đất…" value={search} onChangeText={setSearch} />
           <View className="flex-row items-center gap-2 mb-2">
             <FontAwesome
               name="location-arrow"
@@ -167,30 +161,31 @@ export const ManagePlotScreen = ({
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingRight: 20 }}
           >
+            <TouchableOpacity activeOpacity={1} onPress={() => setFilterFarmId("")} style={{ backgroundColor: !filterFarmId ? Colors.forestgreen : Colors.surfaceMuted, paddingHorizontal: 18, paddingVertical: 10, borderRadius: 14, marginRight: 10 }}><Text style={{ color: !filterFarmId ? "white" : Colors.textPrimary, fontWeight: "700" }}>Tất cả</Text></TouchableOpacity>
             {farmRes?.data?.map((farm: any) => {
-              const isSelected = farmId === farm._id;
+              const isSelected = filterFarmId === farm._id;
               return (
                 <TouchableOpacity
                   key={farm._id}
-                  activeOpacity={0.8}
+                  activeOpacity={1}
                   onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    setTimeout(() => setFarmId(farm._id), 0);
+                    setFilterFarmId(farm._id);
                   }}
                   className="rounded-full px-5 py-2.5 mr-3 flex-row items-center"
                   style={{
                     backgroundColor: isSelected
                       ? Colors.leafgreen
-                      : Colors.brandorange,
+                      : Colors.surfaceMuted,
                     borderColor: isSelected
                       ? Colors.leafgreen
-                      : Colors.brandorange,
+                      : Colors.surfaceMuted,
                     borderWidth: 1,
                   }}
                 >
-                  <Text
+                  <Text localize={false}
                     className="font-bold text-[15px]"
-                    style={{ color: isSelected ? "white" : "white" }}
+                    style={{ color: isSelected ? "white" : Colors.textPrimary }}
                   >
                     {farm.name}
                   </Text>
@@ -200,23 +195,22 @@ export const ManagePlotScreen = ({
           </ScrollView>
         </View>
         {plots?.filter(
-          (plot: Plot) => plot.farmId?._id === farmId || plot.farmId === farmId,
+          (plot: Plot) => (!filterFarmId || (plot.farmId?._id || plot.farmId) === filterFarmId) && plot.name.toLocaleLowerCase("vi").includes(search.trim().toLocaleLowerCase("vi")),
         ).length === 0 ? (
           <View className="items-center justify-center py-12 mt-4 bg-white rounded-[20px] border border-dashed border-gray-300">
             <FontAwesome5 name="layer-group" size={48} color="#D1D5DB" />
             <Text className="text-center text-gray-800 font-bold mt-4 text-[18px]">
-              Chưa có lô đất nào
+              {search.trim() ? "Không tìm thấy lô đất phù hợp" : "Chưa có lô đất nào"}
             </Text>
             <Text className="text-center text-gray-500 mt-2 text-[15px] px-6">
-              Nông trại này đang trống. Cô/chú bấm nút "Thêm" ở góc trên để tạo
-              lô đất mới nhé!
+              {search.trim() ? "Hãy thử tên khác hoặc chọn nông trại khác." : "Bấm nút Thêm ở góc trên để tạo lô đất mới."}
             </Text>
           </View>
         ) : (
           plots
             ?.filter(
               (plot: Plot) =>
-                plot.farmId?._id === farmId || plot.farmId === farmId,
+                (!filterFarmId || (plot.farmId?._id || plot.farmId) === filterFarmId) && plot.name.toLocaleLowerCase("vi").includes(search.trim().toLocaleLowerCase("vi")),
             )
             .map((plot: Plot, index: number) => (
               <Animated.View
@@ -235,17 +229,17 @@ export const ManagePlotScreen = ({
                     />
                   </View>
                   <View className="flex-1 ml-3">
-                    <Text className="font-bold text-[18px] text-gray-800">
+                    <Text localize={false} className="font-bold text-[18px] text-gray-800">
                       {plot.name}
                     </Text>
                     {plot.farmId?.name && (
                       <Text className="text-gray-500 font-medium text-[13px] mt-1">
-                        Nông trại: {plot.farmId.name}
+                        Nông trại: <Text localize={false}>{plot.farmId.name}</Text>
                       </Text>
                     )}
 
                     {plot.description ? (
-                      <Text
+                      <Text localize={false}
                         className="text-gray-600 mt-1 text-[14px]"
                         numberOfLines={2}
                       >

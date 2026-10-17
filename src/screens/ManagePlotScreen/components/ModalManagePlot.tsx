@@ -1,95 +1,24 @@
 import { FormModal } from "@/components/common/FormModal";
+import { FormField } from "@/components/common/FormField";
+import { PrimaryButton } from "@/components/common/PrimaryButton";
 import { Colors } from "@/constant/Colors";
+import { useTranslation } from "@/i18n";
 import { useFarm } from "@/hooks/api/farm/useFarm";
 import { Picker } from "@react-native-picker/picker";
-import React from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
-
-export const ModalManagePlot = ({
-  isModalVisible,
-  setIsModalVisible,
-  editingId,
-  setEditingId,
-  farmId,          // Thêm prop farmId
-  setFarmId,       // Thêm prop setFarmId
-  name,
-  setName,
-  description,
-  setDescription,
-  handleSave,
-}: {
-  isModalVisible: boolean;
-  setIsModalVisible: (value: boolean) => void;
-  editingId: string | null;
-  setEditingId: (value: string | null) => void;
-  farmId: string;                      // Type cho farmId
-  setFarmId: (value: string) => void;  // Type cho setFarmId
-  name: string;
-  setName: (value: string) => void;
-  description: string;
-  setDescription: (value: string) => void;
-  handleSave: () => void;
-}) => {
-  const { data: farm } = useFarm();
-
-  return (
-    <FormModal
-      visible={isModalVisible}
-      onClose={() => setIsModalVisible(false)}
-      title={editingId ? "Sửa thông tin Lô đất" : "Thêm Lô đất mới"}
-    >
-      <View className="mb-4">
-        <Text className="text-gray-700 font-bold mb-2 text-[15px]">
-          Thuộc nông trại <Text className="text-red-500">*</Text>
-        </Text>
-        <View className="bg-gray-50 border border-gray-200 rounded-[12px] overflow-hidden">
-          <Picker
-            selectedValue={farmId}
-            onValueChange={(itemValue) => setFarmId(itemValue)}
-            style={{ height: 50 }}
-          >
-            <Picker.Item label="Chọn nông trại..." value="" color="gray" />
-            {farm?.data?.map((item: any) => (
-              <Picker.Item key={item._id} label={item.name} value={item._id} />
-            ))}
-          </Picker>
-        </View>
-      </View>
-
-      <View className="mb-4">
-        <Text className="text-gray-700 font-bold mb-2 text-[15px]">
-          Tên lô đất <Text className="text-red-500">*</Text>
-        </Text>
-        <TextInput
-          className="bg-gray-50 border border-gray-200 rounded-[12px] p-4 text-[16px] text-gray-800"
-          placeholder="Ví dụ: Lô đất 1..."
-          value={name}
-          onChangeText={setName}
-        />
-      </View>
-
-      <View className="mb-6">
-        <Text className="text-gray-700 font-bold mb-2 text-[15px]">
-          Mô tả thêm (Không bắt buộc)
-        </Text>
-        <TextInput
-          className="bg-gray-50 border border-gray-200 rounded-[12px] p-4 text-[16px] text-gray-800"
-          placeholder="Ghi chú về lô đất này..."
-          value={description}
-          onChangeText={setDescription}
-          multiline
-          numberOfLines={3}
-          textAlignVertical="top"
-        />
-      </View>
-
-      <TouchableOpacity
-        className="w-full py-4 rounded-[12px] items-center justify-center"
-        style={{ backgroundColor: Colors.forestgreen }}
-        onPress={handleSave}
-      >
-        <Text className="text-white font-bold text-[18px]">Lưu thông tin</Text>
-      </TouchableOpacity>
-    </FormModal>
-  );
+import { useState } from "react";
+import { View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
+type Props = { isModalVisible: boolean; setIsModalVisible: (value: boolean) => void; editingId: string | null; setEditingId: (value: string | null) => void; farmId: string; setFarmId: (value: string) => void; name: string; setName: (value: string) => void; description: string; setDescription: (value: string) => void; handleSave: () => void | Promise<void> };
+export const ModalManagePlot = (props: Props) => {
+  const { t } = useTranslation();
+  const { data: farms } = useFarm();
+  const [saving, setSaving] = useState(false);
+  const save = async () => { if (saving) return; setSaving(true); try { await props.handleSave(); } finally { setSaving(false); } };
+  return <FormModal visible={props.isModalVisible} onClose={() => props.setIsModalVisible(false)} title={props.editingId ? "Cập nhật lô đất" : "Tạo lô đất"}>
+    <Text style={{ fontSize: 14, fontWeight: "700", color: Colors.textPrimary, marginBottom: 9 }}>Thuộc nông trại *</Text>
+    <View style={{ backgroundColor: Colors.offwhite, borderWidth: 1.5, borderColor: Colors.border, borderRadius: 16, overflow: "hidden", marginBottom: 18 }}><Picker selectedValue={props.farmId} onValueChange={props.setFarmId}><Picker.Item label={t("Chọn nông trại")} value="" />{farms?.data?.map((item: any) => <Picker.Item key={item._id} label={item.name} value={item._id} />)}</Picker></View>
+    <FormField label="Tên lô đất" required icon="grid-outline" placeholder="Ví dụ: Lô cà phê số 1" value={props.name} onChangeText={props.setName} />
+    <FormField label="Mô tả" multiline placeholder="Đặc điểm hoặc ghi chú về lô đất…" value={props.description} onChangeText={props.setDescription} />
+    <PrimaryButton title="Lưu lô đất" loading={saving} onPress={() => void save()} />
+  </FormModal>;
 };

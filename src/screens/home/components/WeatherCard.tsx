@@ -1,6 +1,7 @@
 import { Colors } from "@/constant/Colors";
 import { useRouter } from "expo-router";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 type WeatherProps = {
   location: string;
@@ -20,14 +21,16 @@ export const WeatherCard = (props: WeatherProps) => {
       onPress={() => {
         router.navigate("/weather" as any);
       }}
-      className="w-full p-5 rounded-3xl flex-row justify-between items-center"
+      className="w-full p-5 rounded-[28px] flex-row justify-between items-center overflow-hidden"
       style={{
-        backgroundColor: Colors.leafgreen,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.15,
-        shadowRadius: 10,
-        elevation: 6,
+        backgroundColor: Colors.forestgreen,
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.16)",
+        shadowColor: Colors.shadow,
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.22,
+        shadowRadius: 16,
+        elevation: 8,
       }}
     >
       {/* Cột trái: Thông tin chính */}
@@ -59,7 +62,7 @@ export const WeatherCard = (props: WeatherProps) => {
           className="text-[13px] font-medium mt-1 opacity-90" 
           style={{ color: Colors.offwhite }}
         >
-          Độ ẩm: {props.humidity}%   Gió: {props.windSpeed} km/h
+          Độ ẩm: {props.humidity}%   Gió: {(props.windSpeed * 3.6).toFixed(1)} km/h
         </Text>
       </View>
 

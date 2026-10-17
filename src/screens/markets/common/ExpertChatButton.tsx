@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Colors } from "@/constant/Colors";
 import { ICONS } from "assets/icons";
 import { useRouter } from "expo-router";
-import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Image, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 export const ExpertChatButton = () => {
   const router = useRouter()

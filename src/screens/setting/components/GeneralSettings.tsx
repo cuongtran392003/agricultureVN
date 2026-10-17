@@ -1,7 +1,10 @@
 import { Card } from "@/components/ui/card";
+import { LanguagePicker } from "@/components/common/LanguagePicker";
 import { Colors } from "@/constant/Colors";
 import { FontAwesome } from "@expo/vector-icons";
-import { Text, TouchableOpacity, View } from "react-native";
+import { router } from "expo-router";
+import { Pressable, TouchableOpacity, View } from "react-native";
+import { LocalizedText as Text } from "@/components/common/LocalizedText";
 
 interface SettingRowProps {
   icon: string;
@@ -12,10 +15,10 @@ interface SettingRowProps {
 
 const SettingRow = ({ icon, title, subtitle, isLast }: SettingRowProps) => (
   <>
-    <TouchableOpacity className="flex-row items-center justify-between p-3">
+    <TouchableOpacity className="flex-row items-center justify-between p-4">
       <View className="flex-row gap-3 items-center flex-1">
         <View
-          className="w-[40px] h-[40px] items-center justify-center rounded-full"
+          className="w-[40px] h-[40px] items-center justify-center rounded-[14px]"
           style={{ backgroundColor: Colors.forestgreen }}
         >
           <FontAwesome
@@ -49,15 +52,23 @@ const SettingRow = ({ icon, title, subtitle, isLast }: SettingRowProps) => (
 
 export const GeneralSettings = () => {
   return (
-    <View className="px-[24px] mt-5">
+    <View className="px-[20px] mt-5">
       <Text
         className="font-bold text-[16px] mb-3"
         style={{ color: Colors.brownearth }}
       >
         CÀI ĐẶT CHUNG
       </Text>
-      <Card className="rounded-[12px]">
-        <SettingRow icon="globe" title="Ngôn ngữ" subtitle="Tiếng Việt" />
+      <Card className="rounded-[24px]">
+        <Pressable cssInterop={false} accessibilityRole="button" onPress={() => router.push("/crops")}
+          style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 12, padding: 16, backgroundColor: pressed ? Colors.surfaceMuted : "white" })}>
+          <View style={{ width: 40, height: 40, borderRadius: 14, backgroundColor: Colors.forestgreen, alignItems: "center", justifyContent: "center" }}><FontAwesome name="leaf" size={20} color="white" /></View>
+          <View style={{ flex: 1 }}><Text style={{ fontSize: 14, fontWeight: "700", color: Colors.textPrimary }}>Danh mục cây trồng</Text><Text style={{ fontSize: 12, color: Colors.textSecondary, marginTop: 4 }}>Quản lý cây và giống của bạn</Text></View>
+          <FontAwesome name="chevron-right" size={16} color={Colors.softsoil} />
+        </Pressable>
+        <View style={{ height: 1, backgroundColor: Colors.lightgray, marginHorizontal: 12 }} />
+        <LanguagePicker />
+        <View style={{ height: 1, backgroundColor: Colors.lightgray, marginHorizontal: 12 }} />
         <SettingRow icon="lock" title="Đổi mật khẩu" />
         <SettingRow
           icon="file-text-o"
